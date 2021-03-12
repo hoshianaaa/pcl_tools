@@ -9,6 +9,9 @@ project(pcl_tools)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   pcl_ros
+  roscpp
+  sensor_msgs
+  tf
 )
 
 ## System dependencies are found with CMake's conventions
@@ -202,3 +205,8 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+add_executable(camera_tf src/camera_tf.cpp)
+target_link_libraries(camera_tf
+  ${catkin_LIBRARIES}
+)
