@@ -16,9 +16,9 @@
 
 using namespace std;
 
-std::string input_cloud_topic_ = "/camera/depth/points";
+std::string input_cloud_topic_ = "/camera/depth/color/points";
 std::string output_cloud_topic_ = "tf_depth_cloud";
-std::string robot_frame_ = "robot_frame";
+std::string robot_frame_ = "base_link";
 
 class CameraTF
 {
@@ -71,6 +71,7 @@ private:
 
   void cloudCb(const sensor_msgs::PointCloud2ConstPtr& msgs)
   {
+    std::cout << "callback" << std::endl;
     pcl::PointCloud<pcl::PointXYZ> input_cloud, tf_cloud;
     pcl::fromROSMsg (*msgs, input_cloud);
 
@@ -83,6 +84,11 @@ private:
       p.x = a_1_1 * x + a_1_2 * y + a_1_3 * z + c_1;
       p.y = a_2_1 * x + a_2_2 * y + a_2_3 * z + c_2;
       p.z = a_3_1 * x + a_3_2 * y + a_3_3 * z + c_3;
+
+      p.x = p.x / 1000;
+      p.y = p.y / 1000;
+      p.z = p.z / 1000;
+
       tf_cloud.push_back(p);
     }
 
