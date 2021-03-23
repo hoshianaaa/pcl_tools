@@ -2,17 +2,23 @@ cmake_minimum_required(VERSION 3.0.2)
 project(pcl_tools)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
-# add_compile_options(-std=c++11)
+add_compile_options(-std=c++11)
+add_compile_options(-std=c++14)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  pcl_conversions
+  pcl_msgs
   pcl_ros
   roscpp
+  rospy
   sensor_msgs
   tf
 )
+
+#find_package(PCL 1.8 REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -119,6 +125,7 @@ catkin_package(
 include_directories(
 # include
   ${catkin_INCLUDE_DIRS}
+#  ${PCL_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -209,4 +216,10 @@ include_directories(
 add_executable(camera_tf src/camera_tf.cpp)
 target_link_libraries(camera_tf
   ${catkin_LIBRARIES}
+)
+
+add_executable(change_detection src/change_detection.cpp)
+target_link_libraries(change_detection
+  ${catkin_LIBRARIES}
+#  ${PCL_LIBRARIES}
 )
