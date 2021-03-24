@@ -1,0 +1,11 @@
+<launch>
+
+  <node name="rosbag_play"
+    pkg="rosbag" type="play"
+    args="/home/hoshina/change_detection.bag --clock --loop">
+  </node>
+
+	<node name="change_detection" pkg="pcl_tools" type="change_detection" />
+
+</launch>
+
