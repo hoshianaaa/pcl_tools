@@ -2,10 +2,16 @@
 
   <node name="rosbag_play"
     pkg="rosbag" type="play"
-    args="/home/hoshina/change_detection.bag --clock --loop">
+    args="/home/hoshina/ChangeDetection.bag --clock --loop">
   </node>
 
-	<node name="change_detection" pkg="pcl_tools" type="change_detection" />
+  <arg name="input_cloud" value="/camera/depth/color/points" />
+
+	<node name="change_detection" pkg="pcl_tools" type="change_detection">
+    <remap from="points" to="$(arg input_cloud)" />
+  </node>
+
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find pcl_tools)/rviz/change_detection.rviz" required="false" />
 
 </launch>
 
