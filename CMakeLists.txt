@@ -16,6 +16,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   sensor_msgs
   tf
+  std_srvs
 )
 
 #find_package(PCL 1.8 REQUIRED)

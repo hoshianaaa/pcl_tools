@@ -3,23 +3,30 @@
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/point_cloud_conversion.h>
 #include <pcl_conversions/pcl_conversions.h>
+#include <std_srvs/Empty.h>
 
 //pcl
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
 #include <pcl/octree/octree.h>
 
+#include <pcl/io/io.h>
+
+
 class ChangeDetection
 {
 public:
-  ChangeDetection(ros::NodeHandle* nodehandle);
+  ChangeDetection(ros::NodeHandle* nodehandle, std::string fname);
 
 private:
   ros::NodeHandle nh_;
 
   ros::Publisher diff_pub_;
   ros::Subscriber cloud_sub_;
+  ros::ServiceServer srv_;
+
   void cloudCallback(const sensor_msgs::PointCloud2 &pc);
+  bool serviceCallBack(std_srvs::Empty::Request &req,std_srvs::Empty::Response &resp);
   void publishcloud();
   std::string sensor_frame_;
   std::string input_topic_name_;
@@ -27,16 +34,19 @@ private:
 
   float resolution_,noise_filter_;
 
-
   pcl::PointCloud<pcl::PointXYZ>::Ptr first_cloud;
   pcl::PointCloud<pcl::PointXYZ>::Ptr filtered_cloud;
 
-  bool first_ = true;
+  std::string fname_;
+  bool first_;
 
 };
 
-ChangeDetection::ChangeDetection(ros::NodeHandle* nodehandle):nh_(*nodehandle)
+ChangeDetection::ChangeDetection(ros::NodeHandle* nodehandle, std::string fname):nh_(*nodehandle)
 {
+
+  fname_ = fname;
+
   std::cout << "start change detection" << std::endl;
 
   input_topic_name_ = "/points";
@@ -48,8 +58,13 @@ ChangeDetection::ChangeDetection(ros::NodeHandle* nodehandle):nh_(*nodehandle)
   first_cloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
   filtered_cloud.reset(new pcl::PointCloud<pcl::PointXYZ>);
 
+  pcl::io::loadPCDFile (fname_, *first_cloud);
+
   diff_pub_ = nh_.advertise<sensor_msgs::PointCloud2>(output_topic_name_,1, false);
   cloud_sub_ = nh_.subscribe(input_topic_name_, 1, &ChangeDetection::cloudCallback, this);
+  srv_ = nh_.advertiseService("savePCD", &ChangeDetection::serviceCallBack, this);
+
+  first_ = false;
 }
 
 void ChangeDetection::cloudCallback(const sensor_msgs::PointCloud2  &pc)
@@ -69,40 +84,45 @@ void ChangeDetection::cloudCallback(const sensor_msgs::PointCloud2  &pc)
 
   pcl::fromROSMsg (pc, *cloud);
 
-  if (first_){
+  if (first_ == true)
+  {
     first_cloud = cloud;
+    pcl::io::savePCDFileASCII (fname_, *first_cloud);
     first_ = false;
   }
-  else
-  {
 
+  pcl::octree::OctreePointCloudChangeDetector<pcl::PointXYZ> *octree_  = new pcl::octree::OctreePointCloudChangeDetector<pcl::PointXYZ>(resolution_);
 
-    pcl::octree::OctreePointCloudChangeDetector<pcl::PointXYZ> *octree_  = new pcl::octree::OctreePointCloudChangeDetector<pcl::PointXYZ>(resolution_);
+  octree_->setInputCloud (first_cloud);
+  octree_->addPointsFromInputCloud ();
 
-    octree_->setInputCloud (first_cloud);
-    octree_->addPointsFromInputCloud ();
+  octree_->switchBuffers ();
 
-    octree_->switchBuffers ();
+  octree_->setInputCloud (cloud);
+  octree_->addPointsFromInputCloud ();
 
-    octree_->setInputCloud (cloud);
-    octree_->addPointsFromInputCloud ();
+  boost::shared_ptr<std::vector<int> > newPointIdxVector (new std::vector<int>);
+  octree_->getPointIndicesFromNewVoxels (*newPointIdxVector, noise_filter_);
 
-    boost::shared_ptr<std::vector<int> > newPointIdxVector (new std::vector<int>);
-    octree_->getPointIndicesFromNewVoxels (*newPointIdxVector, noise_filter_);
+  filtered_cloud.reset (new pcl::PointCloud<pcl::PointXYZ>);
+  filtered_cloud->points.reserve(newPointIdxVector->size());
 
-    filtered_cloud.reset (new pcl::PointCloud<pcl::PointXYZ>);
-    filtered_cloud->points.reserve(newPointIdxVector->size());
+  for (std::vector<int>::iterator it = newPointIdxVector->begin (); it != newPointIdxVector->end (); it++)
+    filtered_cloud->points.push_back(cloud->points[*it]);
 
-    for (std::vector<int>::iterator it = newPointIdxVector->begin (); it != newPointIdxVector->end (); it++)
-      filtered_cloud->points.push_back(cloud->points[*it]);
+  sensor_msgs::PointCloud2 octree_change_pointcloud2;
+  pcl::toROSMsg(*filtered_cloud, octree_change_pointcloud2);
+  
+  octree_change_pointcloud2.header = pc.header;
+  octree_change_pointcloud2.is_dense = false;
+  diff_pub_.publish(octree_change_pointcloud2);
+}
 
-    sensor_msgs::PointCloud2 octree_change_pointcloud2;
-    pcl::toROSMsg(*filtered_cloud, octree_change_pointcloud2);
-    
-    octree_change_pointcloud2.header = pc.header;
-    octree_change_pointcloud2.is_dense = false;
-    diff_pub_.publish(octree_change_pointcloud2);
-  }
+bool ChangeDetection::serviceCallBack(std_srvs::Empty::Request &req,
+std_srvs::Empty::Response &resp) {        
+  ROS_INFO_STREAM("save now point cloud!");       
+  first_ = true;
+  return true;
 }
 
 int main(int argc, char **argv)
@@ -111,7 +131,8 @@ int main(int argc, char **argv)
 
   ros::NodeHandle nh;
 
-	ChangeDetection cd(&nh);
+  std::string fname(argv[1]);
+	ChangeDetection cd(&nh,fname);
 
   ros::spin();
 

@@ -7,7 +7,7 @@
 
   <arg name="input_cloud" value="/camera/depth/color/points" />
 
-	<node name="change_detection" pkg="pcl_tools" type="change_detection">
+	<node name="change_detection" pkg="pcl_tools" type="change_detection" args="$(find pcl_tools)/pcd/ref_cloud.pcd" >
     <remap from="points" to="$(arg input_cloud)" />
   </node>
 
