@@ -116,6 +116,8 @@ void ChangeDetection::cloudCallback(const sensor_msgs::PointCloud2  &pc)
   octree_change_pointcloud2.header = pc.header;
   octree_change_pointcloud2.is_dense = false;
   diff_pub_.publish(octree_change_pointcloud2);
+
+  delete octree_;
 }
 
 bool ChangeDetection::serviceCallBack(std_srvs::Empty::Request &req,
