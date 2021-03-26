@@ -12,10 +12,11 @@
 class ChangeDetection
 {
 public:
-  ChangeDetection();
+  ChangeDetection(ros::NodeHandle* nodehandle);
 
 private:
   ros::NodeHandle nh_;
+
   ros::Publisher diff_pub_;
   ros::Subscriber cloud_sub_;
   void cloudCallback(const sensor_msgs::PointCloud2 &pc);
@@ -34,9 +35,10 @@ private:
 
 };
 
-ChangeDetection::ChangeDetection()
+ChangeDetection::ChangeDetection(ros::NodeHandle* nodehandle):nh_(*nodehandle)
 {
   std::cout << "start change detection" << std::endl;
+
   input_topic_name_ = "/points";
   output_topic_name_ = "/change_cloud";
 
@@ -105,14 +107,14 @@ void ChangeDetection::cloudCallback(const sensor_msgs::PointCloud2  &pc)
 
 int main(int argc, char **argv)
 {
-  std::cout << "start_change detection" << std::endl;
 	ros::init(argc, argv, "change_detection");
-	ChangeDetection cd;
-	ros::Rate r(10);
-	while(ros::ok()){
-		ros::spinOnce();
-		r.sleep();
-	}
+
+  ros::NodeHandle nh;
+
+	ChangeDetection cd(&nh);
+
+  ros::spin();
+
 	return 0;
 }
   
