@@ -2,7 +2,7 @@
 
   <node name="rosbag_play"
     pkg="rosbag" type="play"
-    args="/home/hoshina/ChangeDetection.bag --clock --loop">
+    args="$(env HOME)/ChangeDetection.bag --clock --loop">
   </node>
 
   <arg name="input_cloud" value="/camera/depth/color/points" />
