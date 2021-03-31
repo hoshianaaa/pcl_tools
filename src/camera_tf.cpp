@@ -23,14 +23,10 @@ std::string robot_frame_ = "base_link";
 class CameraTF
 {
 public:
-  CameraTF()
+  CameraTF(const std::string& fname)
   {
 
-    std::string file("./matrix.csv");
-
-    std::cout << "file" << std::endl;
-
-    ifstream ifs(file);
+    ifstream ifs(fname);
 
     string line;
     vector<string> strvec = split(line, ',');
@@ -114,6 +110,11 @@ int main(int argc, char** argv)
 {
   std::cout << "test" << std::endl;
   ros::init(argc, argv, "camera_tf");
-  CameraTF ct;
+
+  if(argc==2 || argc==3)
+  {
+    std::string fname(argv[1]);
+    CameraTF ct(fname);
+  }
   ros::spin();
 }
