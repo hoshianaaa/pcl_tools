@@ -26,6 +26,9 @@ public:
   CameraTF(const std::string& fname)
   {
 
+    output_cloud_pub_ = nh_.advertise<sensor_msgs::PointCloud2>(output_cloud_topic_,1, false);
+    input_cloud_sub_ = nh_.subscribe(input_cloud_topic_, 1, &CameraTF::cloudCb, this);
+
     ifstream ifs(fname);
 
     string line;
@@ -33,37 +36,40 @@ public:
 
     getline(ifs, line);
     strvec = split(line, ',');
-    a_1_1 = std::stof(strvec.at(0));
-    a_1_2 = std::stof(strvec.at(1));
-    a_1_3 = std::stof(strvec.at(2));
-    c_1 = std::stof(strvec.at(3));
+    m11 = std::stof(strvec.at(0));
+    m12 = std::stof(strvec.at(1));
+    m13 = std::stof(strvec.at(2));
+    m14 = std::stof(strvec.at(3));
 
     getline(ifs, line);
     strvec = split(line, ',');
-    a_2_1 = std::stof(strvec.at(0));
-    a_2_2 = std::stof(strvec.at(1));
-    a_2_3 = std::stof(strvec.at(2));
-    c_2 = std::stof(strvec.at(3));
+    m21 = std::stof(strvec.at(0));
+    m22 = std::stof(strvec.at(1));
+    m23 = std::stof(strvec.at(2));
+    m24 = std::stof(strvec.at(3));
 
     getline(ifs, line);
     strvec = split(line, ',');
-    a_3_1 = std::stof(strvec.at(0));
-    a_3_2 = std::stof(strvec.at(1));
-    a_3_3 = std::stof(strvec.at(2));
-    c_3 = std::stof(strvec.at(3));
+    m31 = std::stof(strvec.at(0));
+    m32 = std::stof(strvec.at(1));
+    m33 = std::stof(strvec.at(2));
+    m34 = std::stof(strvec.at(3));
+
+    std::cout << m11 << " " << m12 << " " << m13 << " " << m14 << std::endl;
+    std::cout << m21 << " " << m22 << " " << m23 << " " << m24 << std::endl;
+    std::cout << m31 << " " << m32 << " " << m33 << " " << m34 << std::endl;
 
 
-    output_cloud_pub_ = nh_.advertise<sensor_msgs::PointCloud2>(output_cloud_topic_,1, false);
-    input_cloud_sub_ = nh_.subscribe(input_cloud_topic_, 1, &CameraTF::cloudCb, this);
+
   }
 private:
   ros::NodeHandle nh_;
   ros::Publisher output_cloud_pub_;
   ros::Subscriber input_cloud_sub_;
 
-  double a_1_1, a_1_2, a_1_3, c_1;
-  double a_2_1, a_2_2, a_2_3, c_2;
-  double a_3_1, a_3_2, a_3_3, c_3;
+  double m11, m12, m13, m14;
+  double m21, m22, m23, m24;
+  double m31, m32, m33, m34;
 
   void cloudCb(const sensor_msgs::PointCloud2ConstPtr& msgs)
   {
@@ -77,9 +83,9 @@ private:
       double x = input_cloud[i].x;
       double y = input_cloud[i].y;
       double z = input_cloud[i].z;
-      p.x = a_1_1 * x + a_1_2 * y + a_1_3 * z + c_1;
-      p.y = a_2_1 * x + a_2_2 * y + a_2_3 * z + c_2;
-      p.z = a_3_1 * x + a_3_2 * y + a_3_3 * z + c_3;
+      p.x = m11 * x + m12 * y + m13 * z + m14;
+      p.y = m21 * x + m22 * y + m23 * z + m24;
+      p.z = m31 * x + m32 * y + m33 * z + m34;
 
       p.x = p.x / 1000;
       p.y = p.y / 1000;
