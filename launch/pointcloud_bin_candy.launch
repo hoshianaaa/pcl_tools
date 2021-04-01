@@ -7,6 +7,6 @@
 		<remap from="cloud_pcd" to="bin_candy_points"/>
 		<param name="frame_id" value="base_link" />
 	</node>
-	<!-- node name="rviz" pkg="rviz" type="rviz" args="-d $(find pcl_tools)/rviz/pointcloud.rviz" required="true" /-->
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find pcl_tools)/rviz/pointcloud_bin_candy.rviz" required="true" />
 	<!-- After opening rviz, please open PointCloud2 topic by yourself. -->
 </launch>
