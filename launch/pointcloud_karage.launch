@@ -1,4 +1,6 @@
 <launch>
+  <arg name="gui" default="true"/>
+
 	<!-- change your file path -->
 	<arg name="file_name" value="$(find pcl_tools)/pcd/karage.pcd"/>
 	<!-- rate : if publish at 10 Hz, set 0.1 -->
@@ -7,6 +9,10 @@
 		<remap from="cloud_pcd" to="karage_points"/>
 		<param name="frame_id" value="base_link" />
 	</node>
-	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find pcl_tools)/rviz/pointcloud_karage.rviz" required="true" />
+
+  <group if="$(arg gui)">
+	  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find pcl_tools)/rviz/pointcloud_karage.rviz" required="true" />
+  </group>
+
 	<!-- After opening rviz, please open PointCloud2 topic by yourself. -->
 </launch>
