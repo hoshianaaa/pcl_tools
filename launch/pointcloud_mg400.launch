@@ -1,0 +1,19 @@
+<launch>
+
+ <arg name="gui" default="false"/>
+
+	<!-- change your file path -->
+	<arg name="file_name" value="$(find pcl_tools)/pcd/mg400.pcd"/>
+	<!-- rate : if publish at 10 Hz, set 0.1 -->
+	<arg name="rate" value="0.1"/>
+	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="pcd_to_pointcloud" args="$(arg file_name) $(arg rate)" output="screen">
+		<remap from="cloud_pcd" to="dobot_points"/>
+		<param name="frame_id" value="base_link" />
+	</node>
+
+  <group if="$(arg gui)">
+	  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find pcl_tools)/rviz/pointcloud_mg400.rviz" required="true" />
+  </group>
+
+	<!-- After opening rviz, please open PointCloud2 topic by yourself. -->
+</launch>
