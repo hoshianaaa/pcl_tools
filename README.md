@@ -1,12 +1,13 @@
 # pcl_tools
 rosでpclを使うときのツール
 
+# install
+
 ```
-#依存パッケージのインストール
 sudo apt-get install ros-melodic-pcl-ros
 ```
 
-# サンプル  
+# サンプル
 ## 点群の出力
 唐揚げ点群がrealsenseと同じtopicで出力される.    
 topic名:/camera/depth/color/points  
