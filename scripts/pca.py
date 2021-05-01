@@ -25,10 +25,6 @@ class DetectGraspablePosesPcabase(ConnectionBasedTransport):
 
         self.pub_target_poses = self.advertise("~output/can_grasp_poses", PoseArray, queue_size=1)
 
-        print(self.direction)
-        print(self.hand_size)
-        print(self.interval_m)
-
     def subscribe(self):
         rospy.Subscriber('~input', PointCloud2, self.callback)
 
@@ -94,7 +90,8 @@ class DetectGraspablePosesPcabase(ConnectionBasedTransport):
             else:
                 rospy.logwarn("direction should be x or z")
             if len(points_depth) > 0:
-                grasp_position = np.append(grasp_xy, np.mean(points_depth))
+                points_depth = np.sort(points_depth)
+                grasp_position = np.append(grasp_xy, points_depth[-1])
             else:
                 rospy.logwarn("it happens that something wrong")
             grasp_position_list.append(list(grasp_position))
