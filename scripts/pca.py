@@ -25,6 +25,10 @@ class DetectGraspablePosesPcabase(ConnectionBasedTransport):
 
         self.pub_target_poses = self.advertise("~output/can_grasp_poses", PoseArray, queue_size=1)
 
+        print(self.direction)
+        print(self.hand_size)
+        print(self.interval_m)
+
     def subscribe(self):
         rospy.Subscriber('~input', PointCloud2, self.callback)
 
@@ -34,6 +38,7 @@ class DetectGraspablePosesPcabase(ConnectionBasedTransport):
     def callback(self, point_cloud):
 
         points = np.array(list(pc2.read_points(point_cloud, skip_nans=True)))
+        print(points)
 
         interval_m = self.interval_m
 
@@ -146,6 +151,7 @@ class DetectGraspablePosesPcabase(ConnectionBasedTransport):
         self.pub_target_poses.publish(pub_msg)
 
 if __name__ == '__main__':
+    print("test")
     rospy.init_node('detect_graspable_poses_pcabase')
     DetectGraspablePosesPcabase()
     rospy.spin()
