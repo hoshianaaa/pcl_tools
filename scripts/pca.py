@@ -34,7 +34,6 @@ class DetectGraspablePosesPcabase(ConnectionBasedTransport):
     def callback(self, point_cloud):
 
         points = np.array(list(pc2.read_points(point_cloud, skip_nans=True)))
-        print(points)
 
         interval_m = self.interval_m
 
