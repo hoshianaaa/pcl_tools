@@ -224,3 +224,9 @@ target_link_libraries(change_detection
   ${catkin_LIBRARIES}
 #  ${PCL_LIBRARIES}
 )
+
+add_executable(towel_detection src/towel_detection.cpp)
+target_link_libraries(towel_detection
+  ${catkin_LIBRARIES}
+#  ${PCL_LIBRARIES}
+)

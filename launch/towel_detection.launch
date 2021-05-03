@@ -1,0 +1,17 @@
+<launch>
+  <arg name="gui" default="true"/>
+  
+  <include file="$(find pcl_tools)/launch/pointcloud_karage.launch">
+    <arg name="gui" value="false"/>
+  </include>
+
+  <node pkg="pcl_tools" type="towel_detection" name="towel_detection" output="screen">
+    <param name="input_topic_name" value="karage_points"/>
+  </node>
+  
+  <group if="$(arg gui)">
+	  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find pcl_tools)/rviz/towel_detection.rviz" required="true" />
+  </group>
+
+	<!-- After opening rviz, please open PointCloud2 topic by yourself. -->
+</launch>
