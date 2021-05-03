@@ -69,6 +69,7 @@ cloud_sub_ = nh_.subscribe(input_topic_name_, 1, &TowelDetection::cloudCallback,
 void TowelDetection::cloudCallback(const sensor_msgs::PointCloud2 &pc)
 {
 
+  std::cout << "callback" << std::endl;
   pcl::PointCloud<pcl::PointXYZ>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZ>);
 
   pcl::fromROSMsg (pc, *cloud);
@@ -94,7 +95,7 @@ void TowelDetection::cloudCallback(const sensor_msgs::PointCloud2 &pc)
     std::pair<int, int> edge;
     edge.first = i;
 
-    std::cout << "index[" << i << "]" << std::endl;
+    //std::cout << "index[" << i << "]" << std::endl;
     if ( kdtree.radiusSearch (cloud->points[i], radius, pointIdxRadiusSearch, pointRadiusSquaredDistance) > 0 )
     {
       for (size_t j = 0; j < pointIdxRadiusSearch.size (); ++j)
@@ -102,20 +103,21 @@ void TowelDetection::cloudCallback(const sensor_msgs::PointCloud2 &pc)
         edge.second = pointIdxRadiusSearch[j];
         if (edge.first == edge.second)continue;
         auto p = std::make_pair(edge.second, edge.first);
+        /*
         if (std::find(edges.begin(), edges.end(), p) != edges.end())
         {
-          std::cout << "edge1:" << edge.first << " edge2:" << edge.second << " found!" << std::endl;
+          //std::cout << "edge1:" << edge.first << " edge2:" << edge.second << " found!" << std::endl;
           continue;
         }
+        */
         edges.push_back(edge);
-        std::cout << "edge1:" << edge.first << " edge2:" << edge.second << std::endl;
+        //std::cout << "edge1:" << edge.first << " edge2:" << edge.second << std::endl;
       }
     }
   }
 
   // ----------- 法線推定 --------------
 
-  std::cout << "debug callback2" << std::endl;
   int k_ = 10;
   int search_radius_ = 0;
   int num_of_threads_ = 0;
@@ -137,7 +139,6 @@ void TowelDetection::cloudCallback(const sensor_msgs::PointCloud2 &pc)
   std::vector<double> weights;
   double beta_th_ = 15;
 
-  std::cout << "debug callback3" << std::endl;
   for (size_t i = 0; i < edges.size (); ++i)
   {
 
@@ -169,36 +170,32 @@ void TowelDetection::cloudCallback(const sensor_msgs::PointCloud2 &pc)
       w = -inner_product(n1,n2);
     }
 
-    std::cout << "weight:" << w << std::endl;
+    //std::cout << "weight:" << w << std::endl;
     weights.push_back(w);
   }
 
-    double debug_weight_th = 0;
+  pcl::PointCloud<pcl::PointXYZI> pcl_weights_cloud;
+  pcl::PointXYZI p;
 
-    pcl::PointCloud<pcl::PointXYZ> pcl_weights_cloud;
-    pcl::PointXYZ p;
+  for (size_t i = 0; i < edges.size (); ++i)
+  {
+    int index1 = edges[i].first;
+    int index2 = edges[i].second;
 
-    for (size_t i = 0; i < edges.size (); ++i)
-    {
-      if(weights[i] < debug_weight_th)
-      {
-        int index1 = edges[i].first;
-        int index2 = edges[i].second;
+    p.x = (cloud->points[index1].x + cloud->points[index2].x) / 2;
+    p.y = (cloud->points[index1].y + cloud->points[index2].y) / 2;
+    p.z = (cloud->points[index1].z + cloud->points[index2].z) / 2;
+    p.intensity = weights[i]; 
 
-        p.x = (cloud->points[index1].x + cloud->points[index2].x) / 2;
-        p.y = (cloud->points[index1].y + cloud->points[index2].y) / 2;
-        p.z = (cloud->points[index1].z + cloud->points[index2].z) / 2;
+    pcl_weights_cloud.push_back(p);
+  }
 
-        pcl_weights_cloud.push_back(p);
-      }
-    }
+  sensor_msgs::PointCloud2 weights_cloud_ros;
+  pcl::toROSMsg(pcl_weights_cloud, weights_cloud_ros);
 
-    sensor_msgs::PointCloud2 weights_cloud_ros;
-    pcl::toROSMsg(pcl_weights_cloud, weights_cloud_ros);
-
-    weights_cloud_ros.header = pc.header;
-    weights_cloud_ros.is_dense = false;
-    weights_pub_.publish(weights_cloud_ros);
+  weights_cloud_ros.header = pc.header;
+  weights_cloud_ros.is_dense = false;
+  weights_pub_.publish(weights_cloud_ros);
 }
 
 int
