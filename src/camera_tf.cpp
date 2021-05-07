@@ -32,6 +32,10 @@ class CameraTF
 public:
   CameraTF()
   {
+
+
+    ros::NodeHandle private_nh("~");
+    private_nh.param("flip_y", flip_y_, false);
     output_cloud_pub_ = nh_.advertise<sensor_msgs::PointCloud2>(output_cloud_topic_,1, false);
     input_cloud_sub_ = nh_.subscribe(input_cloud_topic_, 1, &CameraTF::cloudCb, this);
   }
@@ -39,7 +43,7 @@ private:
   ros::NodeHandle nh_;
   ros::Publisher output_cloud_pub_;
   ros::Subscriber input_cloud_sub_;
-
+  bool flip_y_;
 
   void cloudCb(const sensor_msgs::PointCloud2ConstPtr& msgs)
   {
@@ -56,6 +60,8 @@ private:
       p.x = m11 * x + m12 * y + m13 * z + m14;
       p.y = m21 * x + m22 * y + m23 * z + m24;
       p.z = m31 * x + m32 * y + m33 * z + m34;
+
+      if(flip_y_ == true)p.y = -p.y;
 
       tf_cloud.push_back(p);
     }
