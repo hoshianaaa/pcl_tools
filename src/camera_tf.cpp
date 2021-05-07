@@ -14,7 +14,10 @@
 #include <pcl/common/geometry.h>
 #include <pcl/registration/transformation_estimation_svd.h>
 
+#include <pcl_ros/transforms.h>
+#include <pcl_ros/point_cloud.h>
 
+#include <tf/transform_listener.h>
 
 using namespace std;
 
@@ -26,6 +29,7 @@ double m31, m32, m33, m34;
 std::string input_cloud_topic_ = "/camera/depth/color/points";
 std::string output_cloud_topic_ = "tf_cloud";
 std::string robot_frame_ = "base_link";
+std::string target_frame_ = "camera_color_optical_frame";
 
 class CameraTF
 {
@@ -39,13 +43,35 @@ private:
   ros::NodeHandle nh_;
   ros::Publisher output_cloud_pub_;
   ros::Subscriber input_cloud_sub_;
-
+  tf::TransformListener tf_listener_;
 
   void cloudCb(const sensor_msgs::PointCloud2ConstPtr& msgs)
   {
     std::cout << "callback" << std::endl;
+
+    auto input_frame = std::string(msgs->header.frame_id);
+
+    std::cout << "input_frame:" <<  input_frame << std::endl;
+
+    sensor_msgs::PointCloud2 ros_cloud;
+
+    if(input_frame != target_frame_)
+    {
+       try
+      {
+          tf::StampedTransform trans;
+          tf_listener_.waitForTransform(target_frame_, input_frame, ros::Time(0), ros::Duration(0.5));
+          tf_listener_.lookupTransform(target_frame_, input_frame, ros::Time(0), trans);
+          pcl_ros::transformPointCloud(target_frame_, trans, *msgs, ros_cloud);
+      }
+      catch(tf::TransformException &e)
+      {
+          ROS_WARN("%s", e.what());
+      }
+    }
+
     pcl::PointCloud<pcl::PointXYZ> input_cloud, tf_cloud;
-    pcl::fromROSMsg (*msgs, input_cloud);
+    pcl::fromROSMsg (ros_cloud, input_cloud);
 
     for(int i=0;i<input_cloud.size();i++)
     {

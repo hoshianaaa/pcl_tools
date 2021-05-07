@@ -143,6 +143,7 @@ class DetectGraspablePosesPcabase(ConnectionBasedTransport):
             pose.orientation.z = quaternion[2]
             pose.orientation.w = quaternion[3]
             pub_msg.poses.append(pose)
+            break
 
         self.pub_target_poses.publish(pub_msg)
 
