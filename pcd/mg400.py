@@ -2,10 +2,10 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import math
 
+L1 = 284 - (175 + 66)
 L2 = 175
 L3 = 175
-
-end_effector_params = [66.0,0.0,-60.0]
+L4 = 66
 
 def ki(j1,j2,j3):
   if(check_joint_limit(j1,j2,j3) == False):
@@ -15,11 +15,11 @@ def ki(j1,j2,j3):
   j2_rad = math.pi * j2 / 180
   j3_rad = math.pi * j3 / 180
 
-  l = L2 * math.sin(j2_rad) + L3 * math.cos(j3_rad) + end_effector_params[0]
-  z = L2 * math.cos(j2_rad) - L3 * math.sin(j3_rad) + end_effector_params[2]
+  l =L1 +  L2 * math.sin(j2_rad) + L3 * math.cos(j3_rad) + L4
+  z = L2 * math.cos(j2_rad) - L3 * math.sin(j3_rad)
 
-  x = l * math.cos(j1_rad) + end_effector_params[1] * math.sin(j1_rad)
-  y = l * math.sin(j1_rad) + end_effector_params[1] * math.cos(j1_rad)
+  x = l * math.cos(j1_rad)
+  y = l * math.sin(j1_rad)
 
   return (x,y,z)
 

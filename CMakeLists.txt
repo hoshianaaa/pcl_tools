@@ -225,4 +225,10 @@ target_link_libraries(change_detection
 #  ${PCL_LIBRARIES}
 )
 
+add_executable(normal_filter src/normal_filter.cpp)
+target_link_libraries(normal_filter
+  ${catkin_LIBRARIES}
+#  ${PCL_LIBRARIES}
+)
+
 
