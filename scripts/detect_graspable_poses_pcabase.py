@@ -34,6 +34,11 @@ class DetectGraspablePosesPcabase(ConnectionBasedTransport):
     def callback(self, point_cloud):
 
         points = np.array(list(pc2.read_points(point_cloud, skip_nans=True)))
+        if points.size == 0:
+          pub_msg = PoseArray()
+          pub_msg.header = point_cloud.header
+          self.pub_target_poses.publish(pub_msg)
+          return
 
         interval_m = self.interval_m
 
