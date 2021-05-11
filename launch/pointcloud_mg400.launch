@@ -1,7 +1,7 @@
 <launch>
 
  <arg name="gui" default="false"/>
- <arg name="frame_id" default="base_link"/>
+ <arg name="frame_id" default="dobot_link"/>
 
 	<!-- change your file path -->
 	<arg name="file_name" value="$(find pcl_tools)/pcd/mg400.pcd"/>

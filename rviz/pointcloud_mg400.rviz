@@ -73,7 +73,7 @@ Visualization Manager:
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.0010000000474974513
+      Size (m): 0.003000000026077032
       Style: Flat Squares
       Topic: /dobot_points
       Unreliable: false
@@ -108,7 +108,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 0.38920655846595764
+      Distance: 1.3429659605026245
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -123,10 +123,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.480202317237854
+      Pitch: 1.0297963619232178
       Target Frame: <Fixed Frame>
       Value: ThirdPersonFollower (rviz)
-      Yaw: 2.3754053115844727
+      Yaw: 2.2853951454162598
     Saved:
       - Class: rviz/ThirdPersonFollower
         Distance: 0.2753593623638153
@@ -164,5 +164,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1579
-  X: 75
-  Y: 63
+  X: 210
+  Y: 236
