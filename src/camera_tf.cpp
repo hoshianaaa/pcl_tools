@@ -28,7 +28,6 @@ double m31, m32, m33, m34;
 
 std::string input_cloud_topic_ = "/camera/depth/color/points";
 std::string output_cloud_topic_ = "tf_cloud";
-std::string robot_frame_ = "base_link";
 std::string target_frame_ = "camera_color_optical_frame";
 
 class CameraTF
@@ -40,6 +39,7 @@ public:
 
     ros::NodeHandle private_nh("~");
     private_nh.param("flip_y", flip_y_, false);
+    private_nh.param("robot_frame", robot_frame_, "base_link");
     output_cloud_pub_ = nh_.advertise<sensor_msgs::PointCloud2>(output_cloud_topic_,1, false);
     input_cloud_sub_ = nh_.subscribe(input_cloud_topic_, 1, &CameraTF::cloudCb, this);
   }
@@ -49,6 +49,7 @@ private:
   ros::Subscriber input_cloud_sub_;
   tf::TransformListener tf_listener_;
   bool flip_y_;
+  std::string robot_frame_;
 
   void cloudCb(const sensor_msgs::PointCloud2ConstPtr& msgs)
   {
