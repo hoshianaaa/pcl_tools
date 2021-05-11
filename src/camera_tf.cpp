@@ -39,7 +39,7 @@ public:
 
     ros::NodeHandle private_nh("~");
     private_nh.param("flip_y", flip_y_, false);
-    private_nh.param("robot_frame", robot_frame_, "base_link");
+    private_nh.param("robot_frame", robot_frame_, std::string("base_link"));
     output_cloud_pub_ = nh_.advertise<sensor_msgs::PointCloud2>(output_cloud_topic_,1, false);
     input_cloud_sub_ = nh_.subscribe(input_cloud_topic_, 1, &CameraTF::cloudCb, this);
   }
