@@ -23,6 +23,7 @@ class DetectGraspablePosesPcabase(ConnectionBasedTransport):
         self.deep_z = rospy.get_param('~deep_z', 0.03) # maximum hand width
 
         self.pub_target_poses = self.advertise("~output/can_grasp_poses", PoseArray, queue_size=1)
+        self.pub_debug_highest_poses = self.advertise("~output/debug_highest_pos", PoseArray, queue_size=1)
 
     def subscribe(self):
         rospy.Subscriber('~input', PointCloud2, self.callback)
@@ -38,6 +39,7 @@ class DetectGraspablePosesPcabase(ConnectionBasedTransport):
           pub_msg = PoseArray()
           pub_msg.header = point_cloud.header
           self.pub_target_poses.publish(pub_msg)
+          self.pub_debug_highest_poses.publish(pub_msg)
           return
 
         index = np.argsort(points[:,2])
@@ -67,9 +69,11 @@ class DetectGraspablePosesPcabase(ConnectionBasedTransport):
 
         quaternion = tf.transformations.quaternion_from_matrix(trans_matrix)
 
+        pose = Pose()
+
         pose.position.x = pca.mean_[0]
         pose.position.y = pca.mean_[1]
-        pose.position.z = max_z - deep_z
+        pose.position.z = max_z - self.deep_z
 
         pose.orientation.x = quaternion[0]
         pose.orientation.y = quaternion[1]
@@ -78,7 +82,17 @@ class DetectGraspablePosesPcabase(ConnectionBasedTransport):
 
         pub_msg.poses.append(pose)
 
+
         self.pub_target_poses.publish(pub_msg)
+
+        pub_msg = PoseArray()
+        pub_msg.header = point_cloud.header
+
+        pose.position.z = max_z
+        pub_msg.poses.append(pose)
+
+        self.pub_debug_highest_poses.publish(pub_msg)
+
 
 if __name__ == '__main__':
     print("test")
