@@ -19,7 +19,7 @@ class DetectGraspablePosesPcabase(ConnectionBasedTransport):
 
         super(DetectGraspablePosesPcabase, self).__init__()
 
-        self.hand_size = rospy.get_param('~hand_size', 0.13) # maximum hand width
+        self.hand_size = rospy.get_param('~hand_size', 0.3) # maximum hand width
         self.deep_z = rospy.get_param('~deep_z', 0.03) # maximum hand width
 
         self.pub_target_poses = self.advertise("~output/can_grasp_poses", PoseArray, queue_size=1)
@@ -32,6 +32,7 @@ class DetectGraspablePosesPcabase(ConnectionBasedTransport):
         self.sub.unregister()
 
     def callback(self, point_cloud):
+        print("callback")
 
         points = np.array(list(pc2.read_points(point_cloud, skip_nans=True)))
 
