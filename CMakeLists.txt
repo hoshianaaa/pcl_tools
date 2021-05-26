@@ -231,9 +231,9 @@ target_link_libraries(normal_filter
 #  ${PCL_LIBRARIES}
 )
 
-add_executable(cylinder_model_segmentation src/cylinder_model_segmentation.cpp)
-target_link_libraries(cylinder_model_segmentation
-  #${catkin_LIBRARIES}
+add_executable(harris src/harris.cpp)
+target_link_libraries(harris
+  ${catkin_LIBRARIES}
   ${PCL_LIBRARIES}
 )
 
