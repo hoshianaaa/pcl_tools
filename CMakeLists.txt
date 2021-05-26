@@ -19,7 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
   std_srvs
 )
 
-#find_package(PCL 1.8 REQUIRED)
+find_package(PCL 1.8 REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -229,6 +229,12 @@ add_executable(normal_filter src/normal_filter.cpp)
 target_link_libraries(normal_filter
   ${catkin_LIBRARIES}
 #  ${PCL_LIBRARIES}
+)
+
+add_executable(cylinder_model_segmentation src/cylinder_model_segmentation.cpp)
+target_link_libraries(cylinder_model_segmentation
+  #${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
 )
 
 

@@ -3,7 +3,9 @@ Panels:
     Help Height: 78
     Name: Displays
     Property Tree Widget:
-      Expanded: ~
+      Expanded:
+        - /Global Options1
+        - /Grid1
       Splitter Ratio: 0.5
     Tree Height: 462
   - Class: rviz/Selection
@@ -32,16 +34,16 @@ Toolbars:
 Visualization Manager:
   Class: ""
   Displays:
-    - Alpha: 0.5
-      Cell Size: 1
+    - Alpha: 0.30000001192092896
+      Cell Size: 0.10000000149011612
       Class: rviz/Grid
-      Color: 160; 160; 164
+      Color: 239; 41; 41
       Enabled: true
       Line Style:
         Line Width: 0.029999999329447746
         Value: Lines
       Name: Grid
-      Normal Cell Count: 0
+      Normal Cell Count: 10
       Offset:
         X: 0
         Y: 0
@@ -84,7 +86,7 @@ Visualization Manager:
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: base_link
+    Fixed Frame: dobot_link
     Frame Rate: 30
   Name: root
   Tools:
@@ -108,7 +110,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 1.3429659605026245
+      Distance: 2.574798107147217
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -123,10 +125,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.0297963619232178
+      Pitch: -0.00020298082381486893
       Target Frame: <Fixed Frame>
       Value: ThirdPersonFollower (rviz)
-      Yaw: 2.2853951454162598
+      Yaw: 2.9585766792297363
     Saved:
       - Class: rviz/ThirdPersonFollower
         Distance: 0.2753593623638153
@@ -164,5 +166,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1579
-  X: 210
-  Y: 236
+  X: 521
+  Y: 76
