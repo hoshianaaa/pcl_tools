@@ -19,7 +19,7 @@ class DetectGraspablePosesPcabase(ConnectionBasedTransport):
 
         super(DetectGraspablePosesPcabase, self).__init__()
 
-        self.pub_target_poses = self.advertise("~output/can_grasp_poses", PoseArray, queue_size=1)
+        self.pub_target_poses = self.advertise("~output", PoseArray, queue_size=1)
 
     def subscribe(self):
         rospy.Subscriber('~input', PointCloud2, self.callback)
