@@ -23,7 +23,7 @@ class PoseArrayClipper(ConnectionBasedTransport):
         self.dimension_z = rospy.get_param('~dimension_z', '0.2')
         self.frame_id = rospy.get_param('~frame_id', 'base_link')
 
-        self.pub_output_poses = self.advertise("~output/clipped_poses", PoseArray, queue_size=1)
+        self.pub_output_poses = self.advertise("~output", PoseArray, queue_size=1)
 
         self.pub_clipper_bbox = self.advertise("~output/clipper_bbox", BoundingBox, queue_size=1)
 
