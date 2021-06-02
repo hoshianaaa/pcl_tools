@@ -22,7 +22,7 @@ from jsk_recognition_msgs.msg import PolygonArray
 from geometry_msgs.msg import Polygon, PolygonStamped, Point32
 from std_msgs.msg import Header
 
-square_edge_len = 30 # mm
+square_edge_len = 18 # mm
 pixel_len = 0.5 # mm
 
 square_edge_pixel_len = square_edge_len / pixel_len
@@ -38,7 +38,7 @@ area_th = square_area_pixel * 0.8
 
 right_angle_error_th =  0.4
 
-white_rate_th = 0.9
+white_rate_th = 0.8
 
 def get_polygon_white_rate(polygon,img):
 

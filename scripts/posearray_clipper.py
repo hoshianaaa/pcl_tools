@@ -4,10 +4,14 @@ import numpy as np
 
 import rospy
 
-from geometry_msgs.msg import Pose, PoseArray, Vector3
+from geometry_msgs.msg import Pose, PoseArray, Vector3, PoseStamped
+
 from jsk_topic_tools import ConnectionBasedTransport
 
 from jsk_recognition_msgs.msg import BoundingBox
+
+import tf2_ros
+import tf2_geometry_msgs
 
 class PoseArrayClipper(ConnectionBasedTransport):
 
@@ -27,6 +31,9 @@ class PoseArrayClipper(ConnectionBasedTransport):
 
         self.pub_clipper_bbox = self.advertise("~output/clipper_bbox", BoundingBox, queue_size=1)
 
+        self.tf_buffer = tf2_ros.Buffer() #tf buffer length
+        self.tf_listener = tf2_ros.TransformListener(self.tf_buffer)
+
     def subscribe(self):
         rospy.Subscriber('~input', PoseArray, self.callback)
 
@@ -35,9 +42,19 @@ class PoseArrayClipper(ConnectionBasedTransport):
 
     def callback(self, msg):
 
+        target_frame = self.frame_id
+        input_frame = msg.header.frame_id
+        
+        transform = self.tf_buffer.lookup_transform(target_frame, 
+                                               input_frame, #source frame
+                                               rospy.Time(0),
+                                               rospy.Duration(1.0))
+
+
         print("pose array clipper callback")
 
         posearray = msg.poses
+
 
         x_min = self.initial_pos[0] - self.dimension_x / 2
         x_max = self.initial_pos[0] + self.dimension_x / 2
@@ -49,21 +66,24 @@ class PoseArrayClipper(ConnectionBasedTransport):
         z_max = self.initial_pos[2] + self.dimension_z / 2
 
         pub_msg = PoseArray()
-        pub_msg.header = msg.header
 
         for input_pose in posearray:
 
-          x = input_pose.position.x
-          y = input_pose.position.y
-          z = input_pose.position.z
+          pose_stamped = PoseStamped()
+          pose_stamped.pose = input_pose
+          tf_pose = tf2_geometry_msgs.do_transform_pose(pose_stamped , transform)
+
+          x = tf_pose.pose.position.x
+          y = tf_pose.pose.position.y
+          z = tf_pose.pose.position.z
 
           if (x >= x_min) and (x <= x_max):
             if (y >= y_min) and (y <= y_max):
               if (z >= z_min) and (z <= z_max):
-                pub_msg.poses.append(input_pose)
+                pub_msg.poses.append(tf_pose.pose)
 
+        pub_msg.header.frame_id = self.frame_id
         self.pub_output_poses.publish(pub_msg)
-
 
         bbox = BoundingBox()
 
@@ -79,7 +99,7 @@ class PoseArrayClipper(ConnectionBasedTransport):
         vec.z = self.dimension_z
         bbox.dimensions = vec
 
-        bbox.header = msg.header
+        bbox.header.frame_id = self.frame_id
 
         self.pub_clipper_bbox.publish(bbox)
 
