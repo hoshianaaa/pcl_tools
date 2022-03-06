@@ -1,12 +1,10 @@
 <launch>
 	<!-- change your file path -->
 
-	<arg name="file_name" value="$(find pcl_tools)/pcd/bunny.pcd"/>
-	<arg name="node_name" value="bunny"/>
-
 	<arg name="rate" value="1"/>
-	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="$(arg node_name)" args="$(arg file_name) $(arg rate)" output="screen">
-		<remap from="cloud_pcd" to="/$(arg node_name)_points"/>
+
+	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="bunny" args="$(find pcl_tools)/pcd/bunny.pcd $(arg rate)" output="screen">
+		<remap from="cloud_pcd" to="/bunny_points"/>
 		<param name="frame_id" value="base_link" />
 	</node>
 
