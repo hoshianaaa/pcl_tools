@@ -111,6 +111,29 @@
 		<param name="frame_id" value="base_link" />
 	</node>
 
+	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="hair_teatment" args="$(find pcl_tools)/pcd/hair_treatment_botl/1/1.pcd $(arg rate)" output="screen">
+		<remap from="cloud_pcd" to="/hair_treatment"/>
+		<param name="frame_id" value="base_link" />
+	</node>
+	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="hair_teatment2" args="$(find pcl_tools)/pcd/hair_treatment_botl/2/1.pcd $(arg rate)" output="screen">
+		<remap from="cloud_pcd" to="/hair_treatment2"/>
+		<param name="frame_id" value="base_link" />
+	</node>
+
+	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="hand_cream" args="$(find pcl_tools)/pcd/hand_cream/align/1.pcd $(arg rate)" output="screen">
+		<remap from="cloud_pcd" to="/hand_cream"/>
+		<param name="frame_id" value="base_link" />
+	</node>
+	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="hand_cream2" args="$(find pcl_tools)/pcd/hand_cream/bin/1.pcd $(arg rate)" output="screen">
+		<remap from="cloud_pcd" to="/hand_cream2"/>
+		<param name="frame_id" value="base_link" />
+	</node>
+	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="hand_cream3" args="$(find pcl_tools)/pcd/hand_cream/stand/1.pcd $(arg rate)" output="screen">
+		<remap from="cloud_pcd" to="/hand_cream3"/>
+		<param name="frame_id" value="base_link" />
+	</node>
+
+
 	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find pcl_tools)/rviz/pointcloud_bins.rviz" required="true" />
 	<!-- After opening rviz, please open PointCloud2 topic by yourself. -->
 </launch>
