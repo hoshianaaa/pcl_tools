@@ -102,6 +102,14 @@
 		<param name="frame_id" value="base_link" />
 	</node>
 
+	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="bool" args="$(find pcl_tools)/pcd/bools/1/1.pcd $(arg rate)" output="screen">
+		<remap from="cloud_pcd" to="/bool"/>
+		<param name="frame_id" value="base_link" />
+	</node>
+	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="bool2" args="$(find pcl_tools)/pcd/bools/2/1.pcd $(arg rate)" output="screen">
+		<remap from="cloud_pcd" to="/bool2"/>
+		<param name="frame_id" value="base_link" />
+	</node>
 
 	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find pcl_tools)/rviz/pointcloud_bins.rviz" required="true" />
 	<!-- After opening rviz, please open PointCloud2 topic by yourself. -->
