@@ -3,7 +3,8 @@ Panels:
     Help Height: 78
     Name: Displays
     Property Tree Widget:
-      Expanded: ~
+      Expanded:
+        - /Global Options1
       Splitter Ratio: 0.5
     Tree Height: 462
   - Class: rviz/Selection
@@ -24,7 +25,7 @@ Panels:
     Experimental: false
     Name: Time
     SyncMode: 0
-    SyncSource: hair_treatment2
+    SyncSource: hand_cream
 Preferences:
   PromptSaveOnExit: true
 Toolbars:
@@ -57,7 +58,6 @@ Visualization Manager:
       Name: Axes
       Radius: 0.009999999776482582
       Reference Frame: <Fixed Frame>
-      Show Trail: false
       Value: true
     - Alpha: 1
       Autocompute Intensity Bounds: true
@@ -759,6 +759,27 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: false
+    - Class: rviz/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+        base_link:
+          Value: true
+        camera:
+          Value: true
+      Marker Alpha: 1
+      Marker Scale: 1
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        base_link:
+          camera:
+            {}
+      Update Interval: 0
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -787,7 +808,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 0.9433677196502686
+      Distance: 2.901998996734619
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -795,17 +816,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: -0.0314389169216156
-        Y: 0.060548122972249985
-        Z: 0.6929702758789062
+        X: 0.270216166973114
+        Y: 0.07903489470481873
+        Z: 0.18855607509613037
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
-      Invert Z Axis: true
+      Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.1397958993911743
+      Pitch: 0.3147963285446167
       Target Frame: <Fixed Frame>
-      Yaw: 3.7503862380981445
+      Yaw: 2.4803836345672607
     Saved:
       - Class: rviz/ThirdPersonFollower
         Distance: 0.2753593623638153

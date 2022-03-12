@@ -2,135 +2,138 @@
 	<!-- change your file path -->
 
 	<arg name="rate" value="0.1"/>
+	<arg name="camera_link" value="camera"/>
+
+  <node pkg="pcl_tools" type="tf_publisher_gui.py" name="tf_publisher_gui" args="$(find pcl_tools)/scripts/config.json" output="screen"/>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="bunny" args="$(find pcl_tools)/pcd/bunny.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/bunny"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="battery" args="$(find pcl_tools)/pcd/battery/1/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/battery"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="card_case" args="$(find pcl_tools)/pcd/card_cases/1/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/card_case"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="card_case2" args="$(find pcl_tools)/pcd/card_cases/2/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/card_case2"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="rip" args="$(find pcl_tools)/pcd/rip/1/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/rip"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="rip2" args="$(find pcl_tools)/pcd/rip/2/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/rip2"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="cora_spices" args="$(find pcl_tools)/pcd/cora_spices/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/cora_spices"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="cora_spices2" args="$(find pcl_tools)/pcd/cora_spices/2.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/cora_spices2"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="cora_spices3" args="$(find pcl_tools)/pcd/cora_spices/3.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/cora_spices3"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="lip_gel" args="$(find pcl_tools)/pcd/lip_gel/1/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/lip_gel"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="lip_gel2" args="$(find pcl_tools)/pcd/lip_gel/2/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/lip_gel2"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="lip_gel3" args="$(find pcl_tools)/pcd/lip_gel/3/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/lip_gel3"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="block" args="$(find pcl_tools)/pcd/blocks/1/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/block"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="block2" args="$(find pcl_tools)/pcd/blocks/2/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/block2"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="block3" args="$(find pcl_tools)/pcd/blocks/3/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/block3"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="bond" args="$(find pcl_tools)/pcd/bonds/1/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/bond"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="bond2" args="$(find pcl_tools)/pcd/bonds/2/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/bond2"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="bond3" args="$(find pcl_tools)/pcd/bonds/3/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/bond3"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="egg" args="$(find pcl_tools)/pcd/eggs/1/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/egg"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="egg2" args="$(find pcl_tools)/pcd/eggs/2/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/egg2"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="bool" args="$(find pcl_tools)/pcd/bools/1/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/bool"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="bool2" args="$(find pcl_tools)/pcd/bools/2/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/bool2"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="hair_teatment" args="$(find pcl_tools)/pcd/hair_treatment_botl/1/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/hair_treatment"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="hair_teatment2" args="$(find pcl_tools)/pcd/hair_treatment_botl/2/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/hair_treatment2"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="hand_cream" args="$(find pcl_tools)/pcd/hand_cream/align/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/hand_cream"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="hand_cream2" args="$(find pcl_tools)/pcd/hand_cream/bin/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/hand_cream2"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="hand_cream3" args="$(find pcl_tools)/pcd/hand_cream/stand/1.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/hand_cream3"/>
-		<param name="frame_id" value="base_link" />
+		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
 

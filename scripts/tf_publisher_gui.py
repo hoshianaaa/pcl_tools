@@ -1,4 +1,4 @@
-# https://touch-sp.hatenablog.com/entry/2021/06/11/230615
+#!/usr/bin/env python
 
 import sys
 from PyQt5.QtCore import Qt
@@ -128,12 +128,13 @@ try:
       br.sendTransform(( X, Y, Z),
                        tf.transformations.quaternion_from_euler(EX, EY, EZ),
                        rospy.Time.now(),
-                       "base_link",
-                       "world")
+                       "camera",
+                       "base_link")
 
       r.sleep()
 
 finally:
+  print("finally!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
   new_data = {'x': X, 'y': Y, 'z': Z, 'ex': EX, 'ey': EY, 'ez': EZ}
   data.update(new_data)
