@@ -51,6 +51,10 @@ class Window(QWidget):
 
     def initUI(self):
         
+        global X,Y,Z
+        global EX,EY,EZ
+
+        
         self.angle_label = [QLabel() for x in range(6)]
 
         self.setLableValue()
@@ -60,8 +64,6 @@ class Window(QWidget):
         for each_slider in self.angle_slider:
             each_slider.setMaximum(100)
             each_slider.setMinimum(-100)
-            each_slider.setValue(0)
-            each_slider.valueChanged.connect(self.value_change)
         
         self.angle_slider[0].setValue(int(X * 100))
         self.angle_slider[1].setValue(int(Y * 100))
@@ -69,6 +71,9 @@ class Window(QWidget):
         self.angle_slider[3].setValue(int(EX * 100 / math.pi))
         self.angle_slider[4].setValue(int(EY * 100 / math.pi))
         self.angle_slider[5].setValue(int(EZ * 100 / math.pi))
+
+        for each_slider in self.angle_slider:
+            each_slider.valueChanged.connect(self.value_change)
 
         servo_frame = [QFrame() for x in range(6)]
         servo_layout = [QHBoxLayout() for x in range(6)]
@@ -85,7 +90,7 @@ class Window(QWidget):
         self.setLayout(vbox)
         self.setGeometry(300, 300, 450, 300)
         self.show()
-    
+
     def value_change(self):
         global X,Y,Z
         global EX,EY,EZ
@@ -107,9 +112,7 @@ try:
 
   args = sys.argv
   file_name = args[1]
-  print(file_name)
   data, read_sucess = read_json_file(file_name)
-  print(data)
 
   X = data["x"]
   Y = data["y"]
@@ -134,8 +137,6 @@ try:
       r.sleep()
 
 finally:
-  print("finally!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-
   new_data = {'x': X, 'y': Y, 'z': Z, 'ex': EX, 'ey': EY, 'ez': EZ}
   data.update(new_data)
   write_json_file(file_name, new_data)
