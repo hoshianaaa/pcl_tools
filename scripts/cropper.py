@@ -13,14 +13,19 @@ import tf2_ros
 import tf2_geometry_msgs
 import tf2_sensor_msgs.tf2_sensor_msgs
 
+X = 0
+Y = 0
+Z = 0.25
+DX = 0.5
+DY = 0.5
+DZ = 0.5
+
 def point(x,y,z):
   p = Point()
   p.x = x
   p.y = y
   p.z = z
   return p
-
-
 
 class Raytrace:
     def __init__(self, pub_name, sub_name, sub_type):
@@ -58,8 +63,33 @@ class Raytrace:
             global_cloud = tf2_sensor_msgs.tf2_sensor_msgs.do_transform_cloud(
                 cloud, trans)
 
-            marker.points.append(point(0,-5,0))
-            marker.points.append(point(0,5,0))
+            global X,Y,Z,DX,DY,DZ
+            
+            x = X - DX/2            
+            y = Y - DY/2
+            z = Z - DZ/2
+
+            p1 = point(x,y,z)
+            p2 = point(x + DX,y,z)
+            p3 = point(x,y + DY,z)
+            p4 = point(x + DX,y + DY,z)
+
+            p5 = point(x,y,z + DZ)
+            p6= point(x + DX,y,z + DZ)
+            p7 = point(x,y + DY,z + DZ)
+            p8 = point(x + DX,y + DY,z + DZ)
+
+            marker.points.append(p1)
+            marker.points.append(p2)
+
+            marker.points.append(p1)
+            marker.points.append(p3)
+
+            marker.points.append(p4)
+            marker.points.append(p3)
+
+            marker.points.append(p4)
+            marker.points.append(p2)
 
             for p in pc2.read_points(global_cloud, field_names=(
                     "x", "y", "z"), skip_nans=True):
@@ -67,6 +97,7 @@ class Raytrace:
                 target_point.x = p[0]
                 target_point.y = p[1]
                 target_point.z = p[2]
+
             self.pub.publish(marker)
             break
 
