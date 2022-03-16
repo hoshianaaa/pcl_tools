@@ -15,6 +15,10 @@ import tf2_sensor_msgs.tf2_sensor_msgs
 from std_msgs.msg import Header
 from sensor_msgs import point_cloud2
 
+import sys
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import *
+
 def list2pc2(list, frame_id):
 
   points = []
@@ -169,11 +173,97 @@ class Raytrace:
             self.pub.publish(marker)
             break
 
+class Window(QWidget):
+
+    def __init__(self):
+        super().__init__()
+
+        self.initUI()
+    
+    def setLableValue(self):
+
+        global X,Y,Z
+        global DX,DY,DZ
+
+        self.angle_label[0].setText("X:" + str(round(X,2)))
+        self.angle_label[1].setText("Y:" + str(round(Y,2)))
+        self.angle_label[2].setText("Z:" + str(round(Z,2)))
+        self.angle_label[3].setText("DX:" + str(round(DX,2)))
+        self.angle_label[4].setText("DY:" + str(round(DY,2)))
+        self.angle_label[5].setText("DZ:" + str(round(DZ,2)))
+
+    def initUI(self):
+        
+        global X,Y,Z
+        global DX,DY,DZ
+        
+        self.angle_label = [QLabel() for x in range(6)]
+
+        self.setLableValue()
+ 
+        self.angle_slider = [QSlider(Qt.Orientation.Horizontal) for x in range(6)]
+        
+        for i in range(len(self.angle_slider)):
+          if (i < 3):
+            self.angle_slider[i].setMaximum(100)
+            self.angle_slider[i].setMinimum(-100)
+          else:
+            self.angle_slider[i].setMaximum(100)
+            self.angle_slider[i].setMinimum(0)
+          
+        self.angle_slider[0].setValue(int(X * 100))
+        self.angle_slider[1].setValue(int(Y * 100))
+        self.angle_slider[2].setValue(int(Z * 100))
+        self.angle_slider[3].setValue(int(DX * 100))
+        self.angle_slider[4].setValue(int(DY * 100))
+        self.angle_slider[5].setValue(int(DZ * 100))
+
+        for each_slider in self.angle_slider:
+            each_slider.valueChanged.connect(self.value_change)
+
+        servo_frame = [QFrame() for x in range(6)]
+        servo_layout = [QHBoxLayout() for x in range(6)]
+
+        vbox = QVBoxLayout()
+
+        for i in range(6):
+            servo_layout[i].addWidget(self.angle_label[i])
+            servo_layout[i].addWidget(self.angle_slider[i])
+
+            servo_frame[i].setLayout(servo_layout[i])
+            vbox.addWidget(servo_frame[i])  
+            
+        self.setLayout(vbox)
+        self.setGeometry(300, 300, 450, 300)
+        self.show()
+
+    def value_change(self):
+
+        global X,Y,Z
+        global DX,DY,DZ
+
+        X = self.angle_slider[0].value() / 100.0
+        Y = self.angle_slider[1].value() / 100.0
+        Z = self.angle_slider[2].value() / 100.0
+        DX = self.angle_slider[3].value() / 100.0
+        DY = self.angle_slider[4].value() / 100.0
+        DZ = self.angle_slider[5].value() / 100.0
+
+        self.setLableValue()
+
+
+
 if __name__ == "__main__":
     rospy.init_node("visualize_raytrace")
     pub_name = "/visualize_ray/maker"
     sub_name = "/hand_cream3"
     sub_type = PointCloud2
     raytrace = Raytrace(pub_name, sub_name, sub_type)
-    rospy.spin()
 
+    app = QApplication(sys.argv)
+    ex =Window()
+
+    r = rospy.Rate(10)
+    while not rospy.is_shutdown():
+      QApplication.processEvents()
+      r.sleep()
