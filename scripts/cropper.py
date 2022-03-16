@@ -102,6 +102,19 @@ class Raytrace:
 
             marker.points.append(p8)
             marker.points.append(p7)
+
+            marker.points.append(p1)
+            marker.points.append(p5)
+
+            marker.points.append(p2)
+            marker.points.append(p6)
+
+            marker.points.append(p3)
+            marker.points.append(p7)
+
+            marker.points.append(p4)
+            marker.points.append(p8)
+
             for p in pc2.read_points(global_cloud, field_names=(
                     "x", "y", "z"), skip_nans=True):
                 target_point = Point()
