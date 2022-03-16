@@ -114,12 +114,13 @@ try:
   file_name = args[1]
   data, read_sucess = read_json_file(file_name)
 
-  X = data["x"]
-  Y = data["y"]
-  Z = data["z"]
-  EX = data["ex"]
-  EY = data["ey"]
-  EZ = data["ez"]
+  if read_sucess:
+    X = data["x"]
+    Y = data["y"]
+    Z = data["z"]
+    EX = data["ex"]
+    EY = data["ey"]
+    EZ = data["ez"]
 
   app = QApplication(sys.argv)
   ex =Window()

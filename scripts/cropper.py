@@ -19,6 +19,19 @@ import sys
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 
+def read_json_file(file_name):
+  if os.path.exists(file_name):
+    with open(file_name, 'r') as f:
+      json_load = json.load(f)
+      return json_load, True
+  return None, False
+
+def write_json_file(file_name, dict_data):
+  with open(file_name, 'w') as f:
+    json.dump(dict_data, f, indent=2)
+
+
+
 def list2pc2(list, frame_id):
 
   points = []
@@ -252,9 +265,20 @@ class Window(QWidget):
         self.setLableValue()
 
 
-
-if __name__ == "__main__":
+try:
     rospy.init_node("visualize_raytrace")
+
+    file_name = args[1]
+    data, read_sucess = read_json_file(file_name)
+
+    if read_sucess:
+      X = data["x"]
+      Y = data["y"]
+      Z = data["z"]
+      DX = data["dx"]
+      DY = data["dy"]
+      DZ = data["dz"]
+
     pub_name = "/visualize_ray/maker"
     sub_name = "/hand_cream3"
     sub_type = PointCloud2
@@ -267,3 +291,7 @@ if __name__ == "__main__":
     while not rospy.is_shutdown():
       QApplication.processEvents()
       r.sleep()
+finally:
+  new_data = {'x': X, 'y': Y, 'z': Z, 'dx': DX, 'dy': DY, 'dz': DZ}
+  data.update(new_data)
+  write_json_file(file_name, new_data)
