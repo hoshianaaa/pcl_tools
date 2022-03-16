@@ -19,6 +19,9 @@ import sys
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import *
 
+import os
+import json
+
 def read_json_file(file_name):
   if os.path.exists(file_name):
     with open(file_name, 'r') as f:
@@ -268,6 +271,7 @@ class Window(QWidget):
 try:
     rospy.init_node("visualize_raytrace")
 
+    args = sys.argv
     file_name = args[1]
     data, read_sucess = read_json_file(file_name)
 

@@ -5,6 +5,7 @@
 	<arg name="camera_link" value="camera"/>
 
   <node pkg="pcl_tools" type="tf_publisher_gui.py" name="tf_publisher_gui" args="$(find pcl_tools)/scripts/config.json" output="screen"/>
+  <node pkg="pcl_tools" type="cropper.py" name="cropper" args="$(find pcl_tools)/scripts/cropper_config.json" output="screen"/>
 
 	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="bunny" args="$(find pcl_tools)/pcd/bunny.pcd $(arg rate)" output="screen">
 		<remap from="cloud_pcd" to="/bunny"/>
