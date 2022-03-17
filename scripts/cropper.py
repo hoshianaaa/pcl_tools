@@ -237,18 +237,21 @@ class Window(QWidget):
         for each_slider in self.angle_slider:
             each_slider.valueChanged.connect(self.value_change)
 
-        servo_frame = [QFrame() for x in range(6)]
-        servo_layout = [QHBoxLayout() for x in range(6)]
+        #servo_frame = [QFrame() for x in range(6)]
+        #servo_layout = [QHBoxLayout() for x in range(6)]
 
         vbox = QVBoxLayout()
 
         for i in range(6):
-            servo_layout[i].addWidget(self.angle_label[i])
-            servo_layout[i].addWidget(self.angle_slider[i])
+            #servo_layout[i].addWidget(self.angle_label[i])
+            #servo_layout[i].addWidget(self.angle_slider[i])
 
-            servo_frame[i].setLayout(servo_layout[i])
-            vbox.addWidget(servo_frame[i])  
+            #servo_frame[i].setLayout(servo_layout[i])
+            vbox.addWidget(self.angle_label[i])  
             
+        for i in range(6):
+            vbox.addWidget(self.angle_slider[i])  
+
         self.setLayout(vbox)
         self.setGeometry(300, 300, 450, 300)
         self.show()
