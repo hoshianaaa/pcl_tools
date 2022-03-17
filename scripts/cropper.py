@@ -201,12 +201,12 @@ class Window(QWidget):
         global X,Y,Z
         global DX,DY,DZ
 
-        self.angle_label[0].setText("X:" + str(round(X,2)))
-        self.angle_label[1].setText("Y:" + str(round(Y,2)))
-        self.angle_label[2].setText("Z:" + str(round(Z,2)))
-        self.angle_label[3].setText("DX:" + str(round(DX,2)))
-        self.angle_label[4].setText("DY:" + str(round(DY,2)))
-        self.angle_label[5].setText("DZ:" + str(round(DZ,2)))
+        self.angle_label[0].setText("X:" + str(round(X,3)))
+        self.angle_label[1].setText("Y:" + str(round(Y,3)))
+        self.angle_label[2].setText("Z:" + str(round(Z,3)))
+        self.angle_label[3].setText("DX:" + str(round(DX,3)))
+        self.angle_label[4].setText("DY:" + str(round(DY,3)))
+        self.angle_label[5].setText("DZ:" + str(round(DZ,3)))
 
     def initUI(self):
         
@@ -221,18 +221,18 @@ class Window(QWidget):
         
         for i in range(len(self.angle_slider)):
           if (i < 3):
-            self.angle_slider[i].setMaximum(100)
-            self.angle_slider[i].setMinimum(-100)
+            self.angle_slider[i].setMaximum(1000)
+            self.angle_slider[i].setMinimum(-1000)
           else:
-            self.angle_slider[i].setMaximum(100)
+            self.angle_slider[i].setMaximum(1000)
             self.angle_slider[i].setMinimum(0)
           
-        self.angle_slider[0].setValue(int(X * 100))
-        self.angle_slider[1].setValue(int(Y * 100))
-        self.angle_slider[2].setValue(int(Z * 100))
-        self.angle_slider[3].setValue(int(DX * 100))
-        self.angle_slider[4].setValue(int(DY * 100))
-        self.angle_slider[5].setValue(int(DZ * 100))
+        self.angle_slider[0].setValue(int(X * 1000))
+        self.angle_slider[1].setValue(int(Y * 1000))
+        self.angle_slider[2].setValue(int(Z * 1000))
+        self.angle_slider[3].setValue(int(DX * 1000))
+        self.angle_slider[4].setValue(int(DY * 1000))
+        self.angle_slider[5].setValue(int(DZ * 1000))
 
         for each_slider in self.angle_slider:
             each_slider.valueChanged.connect(self.value_change)
@@ -261,12 +261,12 @@ class Window(QWidget):
         global X,Y,Z
         global DX,DY,DZ
 
-        X = self.angle_slider[0].value() / 100.0
-        Y = self.angle_slider[1].value() / 100.0
-        Z = self.angle_slider[2].value() / 100.0
-        DX = self.angle_slider[3].value() / 100.0
-        DY = self.angle_slider[4].value() / 100.0
-        DZ = self.angle_slider[5].value() / 100.0
+        X = self.angle_slider[0].value() / 1000.0
+        Y = self.angle_slider[1].value() / 1000.0
+        Z = self.angle_slider[2].value() / 1000.0
+        DX = self.angle_slider[3].value() / 1000.0
+        DY = self.angle_slider[4].value() / 1000.0
+        DZ = self.angle_slider[5].value() / 1000.0
 
         self.setLableValue()
 

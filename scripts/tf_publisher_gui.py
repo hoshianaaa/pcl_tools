@@ -81,11 +81,10 @@ class Window(QWidget):
         vbox = QVBoxLayout()
 
         for i in range(6):
-            servo_layout[i].addWidget(self.angle_label[i])
-            servo_layout[i].addWidget(self.angle_slider[i])
+            vbox.addWidget(self.angle_label[i])  
 
-            servo_frame[i].setLayout(servo_layout[i])
-            vbox.addWidget(servo_frame[i])  
+        for i in range(6):
+            vbox.addWidget(self.angle_slider[i])  
             
         self.setLayout(vbox)
         self.setGeometry(300, 300, 450, 300)
