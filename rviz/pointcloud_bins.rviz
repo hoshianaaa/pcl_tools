@@ -801,7 +801,7 @@ Visualization Manager:
       Queue Size: 10
       Selectable: true
       Size (Pixels): 3
-      Size (m): 0.003000000026077032
+      Size (m): 0.0010000000474974513
       Style: Flat Squares
       Topic: /output
       Unreliable: false
@@ -816,6 +816,34 @@ Visualization Manager:
         ray: true
       Queue Size: 100
       Value: true
+    - Alpha: 1
+      Autocompute Intensity Bounds: true
+      Autocompute Value Bounds:
+        Max Value: 10
+        Min Value: -10
+        Value: true
+      Axis: Z
+      Channel Name: intensity
+      Class: rviz/PointCloud2
+      Color: 138; 226; 52
+      Color Transformer: FlatColor
+      Decay Time: 0
+      Enabled: false
+      Invert Rainbow: false
+      Max Color: 255; 255; 255
+      Min Color: 0; 0; 0
+      Name: PointCloud2
+      Position Transformer: XYZ
+      Queue Size: 10
+      Selectable: true
+      Size (Pixels): 3
+      Size (m): 0.003000000026077032
+      Style: Flat Squares
+      Topic: /extract_indices_normal_filtered/output
+      Unreliable: false
+      Use Fixed Frame: true
+      Use rainbow: true
+      Value: false
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -844,7 +872,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 1.3982347249984741
+      Distance: 0.49221566319465637
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -860,9 +888,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.47479474544525146
+      Pitch: 0.6047930121421814
       Target Frame: <Fixed Frame>
-      Yaw: 5.256247043609619
+      Yaw: 4.061222553253174
     Saved:
       - Class: rviz/ThirdPersonFollower
         Distance: 0.2753593623638153

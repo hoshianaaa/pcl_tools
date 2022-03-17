@@ -137,6 +137,36 @@
 		<param name="frame_id" value="$(arg camera_link)" />
 	</node>
 
+  <node name="normal_estimation_omp"
+        pkg="nodelet" type="nodelet"
+        args="standalone jsk_pcl/NormalEstimationOMP">
+    <remap from="~input" to="/output"/>
+    <rosparam>
+      k_search: 15
+      radius_search: 0.0
+    </rosparam>
+  </node>
+
+  <node name="normal_direction_filter"
+        pkg="nodelet" type="nodelet"
+        args="standalone jsk_pcl/NormalDirectionFilter">
+    <remap from="~input" to="normal_estimation_omp/output"/>
+    <rosparam>
+      use_imu: false
+      eps_angle: 0.2
+      direction: [0, 0, 1]
+    </rosparam>
+  </node>
+
+  <node name="extract_indices_normal_filtered"
+          pkg="nodelet" type="nodelet"
+          args="standalone jsk_pcl/ExtractIndices">
+      <remap from="~input" to="normal_estimation_omp/output_with_xyz"/>
+      <remap from="~indices" to="normal_direction_filter/output"/>
+      <rosparam>
+        keep_organized: true
+      </rosparam>
+  </node>
 
 	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find pcl_tools)/rviz/pointcloud_bins.rviz" required="true" />
 	<!-- After opening rviz, please open PointCloud2 topic by yourself. -->
