@@ -4,7 +4,12 @@ import rospy
 import sensor_msgs.point_cloud2 as pc2
 from sensor_msgs.msg import PointCloud2
 
+from sensor_msgs.msg import Image
+from cv_bridge import CvBridge
+
 import numpy as np
+
+import cv2
 
 _one_pixel_length = 0.0005 # 1 pixel length (/m)
 _image_pixel_zero_pos = []
@@ -62,6 +67,19 @@ def callback(point_cloud):
 
         img = np_image.astype(np.uint8)  
 
+        kernel = np.ones((5,5),np.uint8)
+        img = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
+
+        cv2.imshow('image', img)
+        cv2.imwrite('image.png', img)
+        cv2.waitKey(1)
+
+        bridge = CvBridge()
+        imgMsg = bridge.cv2_to_imgmsg(img, "bgr8")
+        pub.publish(imgMsg)
+
+
 rospy.init_node('find_rectangle_pos')
 rospy.Subscriber('output', PointCloud2, callback)
+pub = rospy.Publisher('/usb_cam/image_raw', Image, queue_size=10)
 rospy.spin()

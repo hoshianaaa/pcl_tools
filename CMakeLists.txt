@@ -237,4 +237,10 @@ target_link_libraries(harris
   ${PCL_LIBRARIES}
 )
 
+add_executable(lccp src/lccp.cpp)
+target_link_libraries(lccp
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+)
+
 
