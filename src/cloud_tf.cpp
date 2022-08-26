@@ -99,7 +99,7 @@ vector<string> split(string& input, char delimiter)
 int main(int argc, char** argv)
 {
 
-  ros::init(argc, argv, "camera_tf");
+  ros::init(argc, argv, "cloud_tf");
 
   m11 = 1;
   m12 = 0;
