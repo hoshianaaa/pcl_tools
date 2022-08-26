@@ -26,8 +26,8 @@ double m21, m22, m23, m24;
 double m31, m32, m33, m34;
 
 
-std::string input_topic_ = "points";
-std::string output_topic_ = "tf_points";
+std::string input_topic_ = "input_cloud";
+std::string output_topic_ = "output_cloud";
 std::string output_frame_ = "base_link";
 
 class CloudTF
