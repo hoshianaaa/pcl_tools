@@ -19,15 +19,18 @@
 
 #include <tf/transform_listener.h>
 
+#include <std_msgs/Float32MultiArray.h>
+
 using namespace std;
 
 double m11, m12, m13, m14;
 double m21, m22, m23, m24;
 double m31, m32, m33, m34;
 
+std::string name_ = "cloud_tf";
+std::string input_topic_ = name_ + "/input_cloud";
+std::string output_topic_ = name_ + "/output_cloud";
 
-std::string input_topic_ = "input_cloud";
-std::string output_topic_ = "output_cloud";
 std::string output_frame_ = "base_link";
 
 class CloudTF
@@ -41,12 +44,23 @@ public:
 //    private_nh.param("input", input_cloud_topic_, std::string("/camera/depth/color/points"));
     cloud_pub_ = nh_.advertise<sensor_msgs::PointCloud2>(output_topic_,1, false);
     cloud_sub_ = nh_.subscribe(input_topic_, 1, &CloudTF::cloudCallback, this);
+    matrix_sub_ = nh_.subscribe( name_ + "/matrix", 1, &CloudTF::matrixCallback, this);
 
   }
 private:
   ros::NodeHandle nh_;
   ros::Publisher cloud_pub_;
-  ros::Subscriber cloud_sub_;
+  ros::Subscriber cloud_sub_, matrix_sub_;
+
+  void matrixCallback(const std_msgs::Float32MultiArray& msg)
+  {
+    int num = msg.data.size();
+    ROS_INFO("I susclibed [%i]", num);
+    for (int i = 0; i < num; i++)
+    {
+      ROS_INFO("[%i]:%f", i, msg.data[i]);
+    }
+  }
 
   void cloudCallback(const sensor_msgs::PointCloud2ConstPtr& msg)
   {

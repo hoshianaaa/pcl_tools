@@ -214,8 +214,8 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 
-add_executable(camera_tf src/camera_tf.cpp)
-target_link_libraries(camera_tf
+add_executable(cloud_tf src/cloud_tf.cpp)
+target_link_libraries(cloud_tf
   ${catkin_LIBRARIES}
 )
 

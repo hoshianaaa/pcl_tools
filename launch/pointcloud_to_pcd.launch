@@ -1,10 +1,10 @@
 <launch>
-
+    <!-- pcd ファイルは ~/.ros内に 0.pcd みたいな名前で保存される -->
     <node pkg="pcl_ros" type="pointcloud_to_pcd" name="pointcloud_to_pcd" output="screen">
-        <remap from="input" to="output"/>
+        <remap from="input" to="/camera/depth/color/points"/>
         <!-- prefix : set output folder path. without this, save pcd files in.ros folder. -->
         <!--param name="prefix" value="velodyne_" /-->
-        <param name="fixed_frame" value="base_link" />
+        <param name="fixed_frame" value="camera_depth_optical_frame" />
         <param name="binary" value="false" />
         <param name="compressed" value="false" />
     </node>
