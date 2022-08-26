@@ -54,8 +54,16 @@ private:
 
   void matrixCallback(const std_msgs::Float32MultiArray& msg)
   {
+
     int num = msg.data.size();
     ROS_INFO("I susclibed [%i]", num);
+
+    if (num != 12)
+    {
+      ROS_ERROR("size error");
+      return;
+    }
+
     for (int i = 0; i < num; i++)
     {
       ROS_INFO("[%i]:%f", i, msg.data[i]);
