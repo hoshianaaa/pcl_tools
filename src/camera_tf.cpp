@@ -26,82 +26,63 @@ double m21, m22, m23, m24;
 double m31, m32, m33, m34;
 
 
-std::string output_cloud_topic_ = "tf_cloud";
-std::string target_frame_ = "camera_color_optical_frame";
+std::string input_topic_ = "points";
+std::string output_topic_ = "tf_points";
+std::string output_frame_ = "base_link";
 
-class CameraTF
+class CloudTF
 {
 public:
-  CameraTF()
+  CloudTF()
   {
+//    ros::NodeHandle private_nh("~");
+//    private_nh.param("flip_y", flip_y_, false);
+//    private_nh.param("robot_frame", robot_frame_, std::string("base_link"));
+//    private_nh.param("input", input_cloud_topic_, std::string("/camera/depth/color/points"));
+    cloud_pub_ = nh_.advertise<sensor_msgs::PointCloud2>(output_topic_,1, false);
+    cloud_sub_ = nh_.subscribe(input_topic_, 1, &CloudTF::cloudCallback, this);
 
-
-    ros::NodeHandle private_nh("~");
-    private_nh.param("flip_y", flip_y_, false);
-    private_nh.param("robot_frame", robot_frame_, std::string("base_link"));
-    private_nh.param("input", input_cloud_topic_, std::string("/camera/depth/color/points"));
-    output_cloud_pub_ = nh_.advertise<sensor_msgs::PointCloud2>(output_cloud_topic_,1, false);
-    input_cloud_sub_ = nh_.subscribe(input_cloud_topic_, 1, &CameraTF::cloudCb, this);
   }
 private:
   ros::NodeHandle nh_;
-  ros::Publisher output_cloud_pub_;
-  ros::Subscriber input_cloud_sub_;
-  tf::TransformListener tf_listener_;
-  bool flip_y_;
-  std::string robot_frame_;
-  std::string input_cloud_topic_;
+  ros::Publisher cloud_pub_;
+  ros::Subscriber cloud_sub_;
 
-  void cloudCb(const sensor_msgs::PointCloud2ConstPtr& msgs)
+  void cloudCallback(const sensor_msgs::PointCloud2ConstPtr& msg)
   {
-    std::cout << "callback" << std::endl;
 
-    auto input_frame = std::string(msgs->header.frame_id);
+    //sensor_msgs::PointCloud2 ro
 
-    std::cout << "input_frame:" <<  input_frame << std::endl;
+    pcl::PointCloud<pcl::PointXYZ> pcl_cloud;
 
-    sensor_msgs::PointCloud2 ros_cloud;
+    pcl::fromROSMsg (*msg, pcl_cloud);
 
-    if(input_frame != target_frame_)
-    {
-       try
-      {
-          tf::StampedTransform trans;
-          tf_listener_.waitForTransform(target_frame_, input_frame, ros::Time(0), ros::Duration(0.5));
-          tf_listener_.lookupTransform(target_frame_, input_frame, ros::Time(0), trans);
-          pcl_ros::transformPointCloud(target_frame_, trans, *msgs, ros_cloud);
-      }
-      catch(tf::TransformException &e)
-      {
-          ROS_WARN("%s", e.what());
-      }
-    }
-
-    pcl::PointCloud<pcl::PointXYZ> input_cloud, tf_cloud;
-    pcl::fromROSMsg (ros_cloud, input_cloud);
-
-    for(int i=0;i<input_cloud.size();i++)
+    for(int i=0;i<pcl_cloud.size();i++)
     {
       pcl::PointXYZ p;
-      double x = input_cloud[i].x;
-      double y = input_cloud[i].y;
-      double z = input_cloud[i].z;
+
+      double x = pcl_cloud[i].x;
+      double y = pcl_cloud[i].y;
+      double z = pcl_cloud[i].z;
+
       p.x = m11 * x + m12 * y + m13 * z + m14;
       p.y = m21 * x + m22 * y + m23 * z + m24;
       p.z = m31 * x + m32 * y + m33 * z + m34;
 
-      if(flip_y_ == true)p.y = -p.y;
-
-      tf_cloud.push_back(p);
+      pcl_cloud[i] = p;
     }
 
-    sensor_msgs::PointCloud2 output_cloud_ros;
-    toROSMsg(tf_cloud, output_cloud_ros);
-    output_cloud_ros.header.frame_id = robot_frame_;
-    output_cloud_pub_.publish(output_cloud_ros);
+    sensor_msgs::PointCloud2 ros_cloud;
+
+    toROSMsg(pcl_cloud, ros_cloud);
+
+    ros_cloud.header.frame_id = output_frame_;
+
+    cloud_pub_.publish(ros_cloud);
   }
 };
 
+/*
 vector<string> split(string& input, char delimiter)
 {
   istringstream stream(input);
@@ -112,12 +93,31 @@ vector<string> split(string& input, char delimiter)
   }
   return result;
 }
+*/
 
 
 int main(int argc, char** argv)
 {
+
   ros::init(argc, argv, "camera_tf");
 
+  m11 = 1;
+  m12 = 0;
+  m13 = 0;
+  m14 = 0;
+
+  m21 = 0;
+  m22 = 1;
+  m23 = 0;
+  m24 = 0;
+
+  m31 = 0;
+  m32 = 0;
+  m33 = 1;
+  m34 = 0;
+
+
+/*
   std::string fname(argv[1]);
 
   ifstream ifs(fname);
@@ -152,8 +152,9 @@ int main(int argc, char** argv)
   std::cout << m11 << " " << m12 << " " << m13 << " " << m14 << std::endl;
   std::cout << m21 << " " << m22 << " " << m23 << " " << m24 << std::endl;
   std::cout << m31 << " " << m32 << " " << m33 << " " << m34 << std::endl;
+  */
 
-  CameraTF ct;
+  CloudTF ct;
 
   ros::spin();
 }
