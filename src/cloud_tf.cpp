@@ -31,6 +31,8 @@ std::string output_topic_ = name_ + "/output_cloud";
 
 std::string output_frame_ = "base_link";
 
+std::string f_name = "~/.ros/matrix.csv"
+
 class CloudTF
 {
 public:
@@ -123,6 +125,26 @@ vector<string> split(string& input, char delimiter)
 }
 */
 
+std::string home_dir_check(std::string f_name)
+{
+
+      if (str[0] == "~")
+      {
+        str.erase(0, 1);
+        
+        std::string home_dir = std::getenv("HOME");
+        std::cout << "home dir:" << home_dir << std::endl;
+
+        f_name = home_dir + str;
+      }
+      else
+      {
+        f_name = str;
+      }
+
+      return f_name;
+}
+
 
 int main(int argc, char** argv)
 {
@@ -133,13 +155,19 @@ int main(int argc, char** argv)
   m[5] = 1;
   m[10] = 1;
 
+  // read data
+  if (argc > 1)
+  {
+    f_name = argv[1]
+  }
+
+  f_name = home_dir_check(f_name);
+
+  std::cout << "file name :" << f_name << std::endl;
+
+  
+
 /*
-  std::string fname(argv[1]);
-
-  ifstream ifs(fname);
-
-  std::cout << "file name:" << fname << std::endl;
-
   string line;
   vector<string> strvec = split(line, ',');
 
