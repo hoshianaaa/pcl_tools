@@ -81,8 +81,6 @@ private:
   void cloudCallback(const sensor_msgs::PointCloud2ConstPtr& msg)
   {
 
-    //sensor_msgs::PointCloud2 ro
-
     pcl::PointCloud<pcl::PointXYZ> pcl_cloud;
 
     pcl::fromROSMsg (*msg, pcl_cloud);
@@ -197,37 +195,6 @@ int main(int argc, char** argv)
     write_file(f_name, m);    
   else
     m = data;
-
-/*
-  string line;
-  vector<string> strvec = split(line, ',');
-
-
-  getline(ifs, line);
-  strvec = split(line, ',');
-  m11 = std::stof(strvec.at(0));
-  m12 = std::stof(strvec.at(1));
-  m13 = std::stof(strvec.at(2));
-  m14 = std::stof(strvec.at(3));
-
-  getline(ifs, line);
-  strvec = split(line, ',');
-  m21 = std::stof(strvec.at(0));
-  m22 = std::stof(strvec.at(1));
-  m23 = std::stof(strvec.at(2));
-  m24 = std::stof(strvec.at(3));
-
-  getline(ifs, line);
-  strvec = split(line, ',');
-  m31 = std::stof(strvec.at(0));
-  m32 = std::stof(strvec.at(1));
-  m33 = std::stof(strvec.at(2));
-  m34 = std::stof(strvec.at(3));
-
-  std::cout << m11 << " " << m12 << " " << m13 << " " << m14 << std::endl;
-  std::cout << m21 << " " << m22 << " " << m23 << " " << m24 << std::endl;
-  std::cout << m31 << " " << m32 << " " << m33 << " " << m34 << std::endl;
-  */
 
   CloudTF ct;
 
