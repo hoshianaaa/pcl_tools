@@ -1,2 +1,3 @@
 #rosrun pcl_tools cloud_tf ~/catkin_ws/matrix.csv
-rosrun pcl_tools cloud_tf
+#rosrun pcl_tools cloud_tf
+rosrun pcl_tools cloud_tf ~/catkin_ws/src/pcl_tools/matrix.csv
