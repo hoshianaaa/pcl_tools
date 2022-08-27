@@ -31,7 +31,7 @@ std::string output_topic_ = name_ + "/output_cloud";
 
 std::string output_frame_ = "base_link";
 
-std::string f_name = "~/.ros/matrix.csv"
+std::string f_name = "~/.ros/matrix.csv";
 
 class CloudTF
 {
@@ -125,24 +125,33 @@ vector<string> split(string& input, char delimiter)
 }
 */
 
-std::string home_dir_check(std::string f_name)
+std::string home_dir_check(std::string str)
 {
 
-      if (str[0] == "~")
+      std::string f_name = str;
+
+      if (f_name[0] == '~')
       {
-        str.erase(0, 1);
+        f_name = f_name.erase(0, 1);
         
         std::string home_dir = std::getenv("HOME");
-        std::cout << "home dir:" << home_dir << std::endl;
 
-        f_name = home_dir + str;
-      }
-      else
-      {
-        f_name = str;
+        //std::cout << "home dir:" << home_dir << std::endl;
+
+        f_name = home_dir + f_name;
       }
 
       return f_name;
+}
+
+std::vector<double> read_file(std::string f_name)
+{
+
+}
+
+void write_file(std::string f_name, std::vector<double> data)
+{
+
 }
 
 
@@ -155,15 +164,26 @@ int main(int argc, char** argv)
   m[5] = 1;
   m[10] = 1;
 
-  // read data
+  // file_name
   if (argc > 1)
   {
-    f_name = argv[1]
+    f_name = argv[1];
   }
 
   f_name = home_dir_check(f_name);
 
   std::cout << "file name :" << f_name << std::endl;
+
+  // read_file or write_file
+  std::ifstream ifs("sample2.json");
+  if (ifs)
+  {
+    m = read_file(f_name);
+  }
+  else
+  {
+    write_file(f_name,m);    
+  }
 
   
 
