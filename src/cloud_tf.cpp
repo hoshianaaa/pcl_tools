@@ -23,6 +23,70 @@
 
 using namespace std;
 
+vector<string> split(string& input, char delimiter)
+{
+  istringstream stream(input);
+  string field;
+  vector<string> result;
+  while (getline(stream, field, delimiter)) {
+    result.push_back(field);
+  }
+  return result;
+}
+
+std::string home_dir_check(std::string str)
+{
+
+      std::string f_name = str;
+
+      if (f_name[0] == '~')
+      {
+        f_name = f_name.erase(0, 1);
+        
+        std::string home_dir = std::getenv("HOME");
+
+        //std::cout << "home dir:" << home_dir << std::endl;
+
+        f_name = home_dir + f_name;
+      }
+
+      return f_name;
+}
+
+bool read_file(std::string f_name, std::vector<double>& data)
+{
+  std::ifstream ifs(f_name);
+  if (!ifs)return false;
+  
+  data.clear();
+  std::string line;
+  std::vector<std::string> strvec;
+  getline(ifs, line);
+  strvec = split(line, ',');
+  for (int i=0;i<strvec.size();i++)
+    data.push_back(std::stof(strvec.at(i)));
+
+  return true;
+}
+
+void write_file(std::string f_name, std::vector<double> data)
+{
+  ofstream outputfile(f_name);
+  for (int i=0;i<data.size();i++)
+  {
+    outputfile << data[i];
+    if (i<data.size()-1)outputfile << ",";
+  }
+  outputfile.close();
+}
+
+void print_matrix(std::vector<double> data)
+{
+  for (int i=0;i<3;i++)
+    std::cout << data[i*4] << " " << data[i*4+1] << " " << data[i*4+2] << " " << data[i*4+3] << std::endl;
+  std::cout << std::endl;
+}
+
 std::vector<double> m(12);
 
 std::string name_ = "cloud_tf";
@@ -56,7 +120,7 @@ private:
   {
 
     int num = msg.data.size();
-    ROS_INFO("I susclibed [%i]", num);
+//    ROS_INFO("I susclibed [%i]", num);
 
     if (num != m.size())
     {
@@ -64,10 +128,8 @@ private:
       return;
     }
 
-    for (int i = 0; i < num; i++)
-    {
-      ROS_INFO("[%i]:%f", i, msg.data[i]);
-    }
+    std::cout << "=== set matrix ===" << std::endl;
+    print_matrix(m);
 
     auto list = msg.data;
 
@@ -112,63 +174,6 @@ private:
   }
 };
 
-vector<string> split(string& input, char delimiter)
-{
-  istringstream stream(input);
-  string field;
-  vector<string> result;
-  while (getline(stream, field, delimiter)) {
-    result.push_back(field);
-  }
-  return result;
-}
-
-std::string home_dir_check(std::string str)
-{
-
-      std::string f_name = str;
-
-      if (f_name[0] == '~')
-      {
-        f_name = f_name.erase(0, 1);
-        
-        std::string home_dir = std::getenv("HOME");
-
-        //std::cout << "home dir:" << home_dir << std::endl;
-
-        f_name = home_dir + f_name;
-      }
-
-      return f_name;
-}
-
-bool read_file(std::string f_name, std::vector<double>& data)
-{
-  std::ifstream ifs(f_name);
-  if (!ifs)return false;
-  
-  data.clear();
-  std::string line;
-  std::vector<std::string> strvec;
-  getline(ifs, line);
-  strvec = split(line, ',');
-  for (int i=0;i<strvec.size();i++)
-    data.push_back(std::stof(strvec.at(0)));
-
-  return true;
-}
-
-void write_file(std::string f_name, std::vector<double> data)
-{
-  ofstream outputfile(f_name);
-  for (int i=0;i<data.size();i++)
-  {
-    outputfile << data[i];
-    if (i<data.size()-1)outputfile << ",";
-  }
-  outputfile.close();
-}
-
 
 int main(int argc, char** argv)
 {
@@ -193,10 +198,19 @@ int main(int argc, char** argv)
   std::vector<double> data;
   auto result = read_file(f_name, data);
 
+/*
+  std::cout << "data" << std::endl;
+  for (int i=0;i<data.size();i++)
+    std::cout << i << ": " << data[i] << std::endl;
+*/
+
   if (!result || data.size()!=12)
     write_file(f_name, m);    
   else
     m = data;
+
+  std::cout << "=== initial matrix ===" << std::endl;
+  print_matrix(m);
 
   CloudTF ct;
 
