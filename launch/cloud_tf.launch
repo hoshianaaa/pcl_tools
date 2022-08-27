@@ -1,0 +1,6 @@
+<launch>
+
+	<arg name="file_name" value="$(find pcl_tools)/params/matrix.csv"/>
+	<node pkg="pcl_tools" type="cloud_tf" name="cloud_tf" args="$(arg file_name)" output="screen"/>
+
+</launch>
