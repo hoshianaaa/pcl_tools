@@ -109,17 +109,18 @@ public:
     cloud_pub_ = nh_.advertise<sensor_msgs::PointCloud2>(output_topic_,1, false);
     cloud_sub_ = nh_.subscribe(input_topic_, 1, &CloudTF::cloudCallback, this);
     matrix_sub_ = nh_.subscribe( name_ + "/matrix", 1, &CloudTF::matrixCallback, this);
+    euler_sub_ = nh_.subscribe( name_ + "/euler", 1, &CloudTF::eulerCallback, this);
 
   }
 private:
   ros::NodeHandle nh_;
   ros::Publisher cloud_pub_;
-  ros::Subscriber cloud_sub_, matrix_sub_;
+  ros::Subscriber cloud_sub_, matrix_sub_, euler_sub_;
 
-  void matrixCallback(const std_msgs::Float32MultiArray& msg)
+  void setMatrix(std::vector<auto> matrix)
   {
-
-    int num = msg.data.size();
+    
+    int num = matrix.size();
 //    ROS_INFO("I susclibed [%i]", num);
 
     if (num != m.size())
@@ -128,17 +129,67 @@ private:
       return;
     }
 
+    for (int i=0;i<m.size();i++)
+    {
+      m[i] = matrix[i];
+    }
+
     std::cout << "=== set matrix ===" << std::endl;
     print_matrix(m);
 
-    auto list = msg.data;
+    write_file(f_name, m);
 
-    for (int i=0;i<m.size();i++)
+  }
+
+  void eulerCallback(const std_msgs::Float32MultiArray& msg)
+  {
+
+    int num = msg.data.size();
+//    ROS_INFO("I susclibed [%i]", num);
+
+    if (num != 6)
     {
-      m[i] = list[i];
+      ROS_ERROR("size error");
+      return;
     }
 
-    write_file(f_name, m);
+    // euler -> rotate matrix (ref) https://gist.github.com/LimHyungTae/2499a68ea8ee4d8a876a149858a5b08e
+    
+    double roll = msg.data[0];
+    double pitch = msg.data[1];
+    double yaw = msg.data[2];
+    double x = msg.data[3];
+    double y = msg.data[4];
+    double z = msg.data[5];
+
+    /**< rpy -> quaternion */
+    tf::Quaternion q;
+    q.setRPY(roll, pitch, yaw);
+    q.normalize();
+    
+    // * quaternion -> rotation Matrix */
+    tf::Matrix3x3 tm(q); 
+
+    std::vector<double> matrix(12);
+    // https://cpp.hotexamples.com/jp/examples/tf/Matrix3x3/-/cpp-matrix3x3-class-examples.html
+    for (int i=0;i<3;i++){
+      for (int j=0;j<3;j++){
+        matrix[i*4 + j] = tm[i][j];
+      }
+    }
+
+    matrix[3] = x;
+    matrix[7] = y;
+    matrix[11] = z;
+
+    setMatrix(matrix);
+
+  }
+
+  void matrixCallback(const std_msgs::Float32MultiArray& msg)
+  {
+
+    setMatrix(msg.data);
 
   }
 
