@@ -76,6 +76,8 @@ private:
       m[i] = list[i];
     }
 
+    write_file(f_name, m);
+
   }
 
   void cloudCallback(const sensor_msgs::PointCloud2ConstPtr& msg)
