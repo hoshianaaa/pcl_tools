@@ -23,9 +23,7 @@
 
 using namespace std;
 
-double m11, m12, m13, m14;
-double m21, m22, m23, m24;
-double m31, m32, m33, m34;
+std::vector<double> m(12);
 
 std::string name_ = "cloud_tf";
 std::string input_topic_ = name_ + "/input_cloud";
@@ -58,7 +56,7 @@ private:
     int num = msg.data.size();
     ROS_INFO("I susclibed [%i]", num);
 
-    if (num != 12)
+    if (num != m.size())
     {
       ROS_ERROR("size error");
       return;
@@ -68,6 +66,14 @@ private:
     {
       ROS_INFO("[%i]:%f", i, msg.data[i]);
     }
+
+    auto list = msg.data;
+
+    for (int i=0;i<m.size();i++)
+    {
+      m[i] = list[i];
+    }
+
   }
 
   void cloudCallback(const sensor_msgs::PointCloud2ConstPtr& msg)
@@ -87,9 +93,9 @@ private:
       double y = pcl_cloud[i].y;
       double z = pcl_cloud[i].z;
 
-      p.x = m11 * x + m12 * y + m13 * z + m14;
-      p.y = m21 * x + m22 * y + m23 * z + m24;
-      p.z = m31 * x + m32 * y + m33 * z + m34;
+      p.x = m[0] * x + m[1] * y + m[2] * z + m[3];
+      p.y = m[4] * x + m[5] * y + m[6] * z + m[7];
+      p.z = m[8] * x + m[9] * y + m[10] * z + m[11];
 
       pcl_cloud[i] = p;
     }
@@ -123,21 +129,9 @@ int main(int argc, char** argv)
 
   ros::init(argc, argv, "cloud_tf");
 
-  m11 = 1;
-  m12 = 0;
-  m13 = 0;
-  m14 = 0;
-
-  m21 = 0;
-  m22 = 1;
-  m23 = 0;
-  m24 = 0;
-
-  m31 = 0;
-  m32 = 0;
-  m33 = 1;
-  m34 = 0;
-
+  m[0] = 1;
+  m[5] = 1;
+  m[10] = 1;
 
 /*
   std::string fname(argv[1]);
