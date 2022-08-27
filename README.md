@@ -30,7 +30,12 @@ x,y方向はpcaで中心位置推定,zは点群の最大高さ
 
 ![Screenshot from 2021-05-01 15-47-30](https://user-images.githubusercontent.com/40942409/116774055-cb711680-aa94-11eb-8163-e70297023efb.png)
 
+## cloud tf 
+transform cloud
 
-
+```
+rosrun pcl_tools cloud_tf  # use matrix file ~/.ros/matrix.csv
+rosrun pcl_tools cloud_tf ~/catkin_ws/pcl_tools/sample_matrix.csv   
+```
 
 
