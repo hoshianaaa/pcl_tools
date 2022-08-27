@@ -144,21 +144,29 @@ std::string home_dir_check(std::string str)
 
 bool read_file(std::string f_name, std::vector<double>& data)
 {
-  std::ifstream ifs(file);
+  std::ifstream ifs(f_name);
   if (!ifs)return false;
   
   data.clear();
+  std::string line;
+  std::vector<std::string> strvec;
   getline(ifs, line);
   strvec = split(line, ',');
   for (int i=0;i<strvec.size();i++)
-    data.push_back(std::stof(strvec.at(0));
+    data.push_back(std::stof(strvec.at(0)));
 
   return true;
 }
 
 void write_file(std::string f_name, std::vector<double> data)
 {
-
+  ofstream outputfile(f_name);
+  for (int i=0;i<data.size();i++)
+  {
+    outputfile << data[i];
+    if (i<data.size()-1)outputfile << ",";
+  }
+  outputfile.close();
 }
 
 
@@ -182,12 +190,13 @@ int main(int argc, char** argv)
   std::cout << "file name :" << f_name << std::endl;
 
   // read_file or write_file
-  auto result = read_file(f_name);
+  std::vector<double> data;
+  auto result = read_file(f_name, data);
 
-  if (!result)
-    write_file(f_name,m);    
-
-  
+  if (!result || data.size()!=12)
+    write_file(f_name, m);    
+  else
+    m = data;
 
 /*
   string line;
