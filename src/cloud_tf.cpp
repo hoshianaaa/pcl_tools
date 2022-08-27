@@ -112,7 +112,6 @@ private:
   }
 };
 
-/*
 vector<string> split(string& input, char delimiter)
 {
   istringstream stream(input);
@@ -123,7 +122,6 @@ vector<string> split(string& input, char delimiter)
   }
   return result;
 }
-*/
 
 std::string home_dir_check(std::string str)
 {
@@ -144,9 +142,18 @@ std::string home_dir_check(std::string str)
       return f_name;
 }
 
-std::vector<double> read_file(std::string f_name)
+bool read_file(std::string f_name, std::vector<double>& data)
 {
+  std::ifstream ifs(file);
+  if (!ifs)return false;
+  
+  data.clear();
+  getline(ifs, line);
+  strvec = split(line, ',');
+  for (int i=0;i<strvec.size();i++)
+    data.push_back(std::stof(strvec.at(0));
 
+  return true;
 }
 
 void write_file(std::string f_name, std::vector<double> data)
@@ -175,15 +182,10 @@ int main(int argc, char** argv)
   std::cout << "file name :" << f_name << std::endl;
 
   // read_file or write_file
-  std::ifstream ifs("sample2.json");
-  if (ifs)
-  {
-    m = read_file(f_name);
-  }
-  else
-  {
+  auto result = read_file(f_name);
+
+  if (!result)
     write_file(f_name,m);    
-  }
 
   
 
