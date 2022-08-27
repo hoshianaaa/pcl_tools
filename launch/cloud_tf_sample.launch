@@ -1,0 +1,20 @@
+<launch>
+
+	<arg name="pcd_file" value="$(find pcl_tools)/pcd/bunny.pcd"/>
+
+	<!-- rate : if publish at 10 Hz, set 0.1 -->
+
+	<arg name="rate" value="0.1"/>
+	<node pkg="pcl_ros" type="pcd_to_pointcloud" name="pcd_to_pointcloud" args="$(arg pcd_file) $(arg rate)" output="screen">
+		<remap from="cloud_pcd" to="cloud_tf/input_cloud"/>
+		<param name="frame_id" value="base_link" />
+	</node>
+
+	<arg name="matrix_file" value="$(find pcl_tools)/params/matrix.csv"/>
+	<node pkg="pcl_tools" type="cloud_tf" name="cloud_tf" args="$(arg matrix_file)" output="screen"/>
+
+	<node name="rviz" pkg="rviz" type="rviz" args="-d $(find pcl_tools)/rviz/cloud_tf_sample.rviz" required="true" />
+	<!-- After opening rviz, please open PointCloud2 topic by yourself. -->
+
+
+</launch>

@@ -5,17 +5,35 @@ def talker():
     pub = rospy.Publisher('/cloud_tf/matrix', Float32MultiArray, queue_size=10)
     r = rospy.Rate(10)
 
-    array=[]
+    m=[]
 
     for p in range(12):
-        array.append(p)
+        m.append(0)
+
+    l = 0
+    m[l*4 + 0] = 1
+    m[l*4 + 1] = 0
+    m[l*4 + 2] = 0
+    m[l*4 + 3] = 0.3
+
+    l = 1
+    m[l*4 + 0] = 0
+    m[l*4 + 1] = 1
+    m[l*4 + 2] = 0
+    m[l*4 + 3] = 0
+
+    l = 2
+    m[l*4 + 0] = 0
+    m[l*4 + 1] = 0
+    m[l*4 + 2] = 1
+    m[l*4 + 3] = 0
 
     while not rospy.is_shutdown():
-      array_forPublish = Float32MultiArray(data=array)
-      pub.publish(array_forPublish)
+      _forPublish = Float32MultiArray(data=m)
+      pub.publish(_forPublish)
       r.sleep()
       print("pub")
 
-rospy.init_node("array_pub")
+rospy.init_node("_pub")
 talker()
 
