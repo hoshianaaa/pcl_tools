@@ -51,7 +51,7 @@ void convertToPointCloud2(const cv::Mat &image, sensor_msgs::PointCloud2 &pointc
         for (int j = 0; j < image.cols; ++j) {
             // 座標を設定
             *(reinterpret_cast<float*>(&pointcloud.data[idx + 0])) = j; // X座標
-            *(reinterpret_cast<float*>(&pointcloud.data[idx + 4])) = i; // Y座標
+            *(reinterpret_cast<float*>(&pointcloud.data[idx + 4])) = image.rows - 1 - i; // Y座標
             *(reinterpret_cast<float*>(&pointcloud.data[idx + 8])) = 0.0; // Z座標 (常に0)
 
             // RGB値を設定
