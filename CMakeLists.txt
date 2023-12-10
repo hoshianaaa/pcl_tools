@@ -20,6 +20,8 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 find_package(PCL 1.8 REQUIRED)
+find_package(OpenCV REQUIRED)
+
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -243,4 +245,11 @@ target_link_libraries(lccp
   ${PCL_LIBRARIES}
 )
 
+add_executable(image_to_pc2 src/image_to_pc2.cpp)
+target_link_libraries(image_to_pc2
+  ${catkin_LIBRARIES}
+  ${PCL_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+
+)
 
