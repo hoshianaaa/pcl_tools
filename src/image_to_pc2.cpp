@@ -4,9 +4,10 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 // PointCloud2メッセージを扱うためのヘルパー関数
-void convertToPointCloud2(const cv::Mat &image, sensor_msgs::PointCloud2 &pointcloud) {
+void convertToPointCloud2(const cv::Mat &image, sensor_msgs::PointCloud2 &pointcloud, float scale, float offsetX, float offsetY, float rotationAngle) {
     // 点群の初期設定
     pointcloud.height = 1;
     pointcloud.width = image.rows * image.cols;
@@ -45,13 +46,31 @@ void convertToPointCloud2(const cv::Mat &image, sensor_msgs::PointCloud2 &pointc
     pointcloud.row_step = pointcloud.point_step * pointcloud.width;
     pointcloud.data.resize(pointcloud.row_step * pointcloud.height);
 
+    // 回転のためのパラメータ
+    float cosAngle = cos(rotationAngle);
+    float sinAngle = sin(rotationAngle);
+    float centerX = image.cols / 2.0f;
+    float centerY = image.rows / 2.0f;
+
     // 画像データを点群データに変換
     int idx = 0;
     for (int i = 0; i < image.rows; ++i) {
         for (int j = 0; j < image.cols; ++j) {
+            // 座標の計算
+            float x = j * scale + offsetX;
+            float y = (image.rows - 1 - i) * scale + offsetY;
+
+            // 中心点を軸にした回転
+            float translatedX = x - centerX;
+            float translatedY = y - centerY;
+            float rotatedX = translatedX * cosAngle - translatedY * sinAngle;
+            float rotatedY = translatedX * sinAngle + translatedY * cosAngle;
+            x = rotatedX + centerX;
+            y = rotatedY + centerY;
+
             // 座標を設定
-            *(reinterpret_cast<float*>(&pointcloud.data[idx + 0])) = j; // X座標
-            *(reinterpret_cast<float*>(&pointcloud.data[idx + 4])) = image.rows - 1 - i; // Y座標
+            *(reinterpret_cast<float*>(&pointcloud.data[idx + 0])) = x;
+            *(reinterpret_cast<float*>(&pointcloud.data[idx + 4])) = y;
             *(reinterpret_cast<float*>(&pointcloud.data[idx + 8])) = 0.0; // Z座標 (常に0)
 
             // RGB値を設定
@@ -79,9 +98,15 @@ int main(int argc, char **argv) {
         return -1;
     }
 
+    // 変換パラメータ
+    float scale = 0.01f; // 拡大縮小率
+    float offsetX = 0.0f; // Xオフセット
+    float offsetY = 0.0f; // Yオフセット
+    float rotationAngle = 0.0f; // 回転角度（ラジアン）
+
     // 画像をPointCloud2に変換
     sensor_msgs::PointCloud2 pointcloud;
-    convertToPointCloud2(image, pointcloud);
+    convertToPointCloud2(image, pointcloud, scale, offsetX, offsetY, rotationAngle);
     pointcloud.header.frame_id = "map";
 
     // ループしてPointCloudをpublishする
@@ -94,6 +119,4 @@ int main(int argc, char **argv) {
 
     return 0;
 }
-
-
 
