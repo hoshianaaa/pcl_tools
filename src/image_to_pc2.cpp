@@ -5,6 +5,26 @@
 #include <iostream>
 #include <vector>
 #include <cmath>
+#include <std_msgs/Float64.h>
+
+double scale = 0.036;
+double offsetX = -5.05;
+double offsetY = -4.95;
+
+void scale_Callback(const std_msgs::Float64& msg)
+{
+  scale = msg.data;
+}
+
+void offset_x_Callback(const std_msgs::Float64& msg)
+{
+  offsetX = msg.data;
+}
+
+void offset_y_Callback(const std_msgs::Float64& msg)
+{
+  offsetY = msg.data;
+}
 
 // PointCloud2メッセージを扱うためのヘルパー関数
 void convertToPointCloud2(const cv::Mat &image, sensor_msgs::PointCloud2 &pointcloud, float scale, float offsetX, float offsetY, float rotationAngle) {
@@ -86,10 +106,13 @@ void convertToPointCloud2(const cv::Mat &image, sensor_msgs::PointCloud2 &pointc
 int main(int argc, char **argv) {
     // ROSノードの初期化
     ros::init(argc, argv, "image_to_pointcloud");
-    ros::NodeHandle nh;
-
+    ros::NodeHandle nh("~");
+      
     // Publisherの作成
     ros::Publisher pcl_pub = nh.advertise<sensor_msgs::PointCloud2>("pointcloud", 1);
+    ros::Subscriber scale_sub = nh.subscribe("scale", 10, scale_Callback);
+    ros::Subscriber offset_x_sub = nh.subscribe("offset_x", 10, offset_x_Callback);
+    ros::Subscriber offset_y_sub = nh.subscribe("offset_y", 10, offset_y_Callback);
 
     // OpenCVで画像を読み込む
     cv::Mat image = cv::imread("/home/dev/office_map2.png", cv::IMREAD_COLOR);
@@ -99,19 +122,19 @@ int main(int argc, char **argv) {
     }
 
     // 変換パラメータ
-    float scale = 0.01f; // 拡大縮小率
-    float offsetX = -3.0f; // Xオフセット
-    float offsetY = -3.0f; // Yオフセット
+//    float scale = 0.01f; // 拡大縮小率
+//    float offsetX = -3.0f; // Xオフセット
+//    float offsetY = -3.0f; // Yオフセット
     float rotationAngle = 0; // 回転角度（ラジアン）
 
     // 画像をPointCloud2に変換
     sensor_msgs::PointCloud2 pointcloud;
-    convertToPointCloud2(image, pointcloud, scale, offsetX, offsetY, rotationAngle);
     pointcloud.header.frame_id = "map";
 
     // ループしてPointCloudをpublishする
-    ros::Rate loop_rate(1);
+    ros::Rate loop_rate(3);
     while (ros::ok()) {
+        convertToPointCloud2(image, pointcloud, scale, offsetX, offsetY, rotationAngle);
         pcl_pub.publish(pointcloud);
         ros::spinOnce();
         loop_rate.sleep();
