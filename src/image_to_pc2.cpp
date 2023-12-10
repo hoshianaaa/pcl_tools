@@ -100,9 +100,9 @@ int main(int argc, char **argv) {
 
     // 変換パラメータ
     float scale = 0.01f; // 拡大縮小率
-    float offsetX = 0.0f; // Xオフセット
-    float offsetY = 0.0f; // Yオフセット
-    float rotationAngle = 0.0f; // 回転角度（ラジアン）
+    float offsetX = -3.0f; // Xオフセット
+    float offsetY = -3.0f; // Yオフセット
+    float rotationAngle = 0; // 回転角度（ラジアン）
 
     // 画像をPointCloud2に変換
     sensor_msgs::PointCloud2 pointcloud;
